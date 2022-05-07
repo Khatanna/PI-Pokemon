@@ -1,10 +1,17 @@
+import { Fragment } from "react";
 import styles from "./styles/App.module.css";
+import NavBar from "./components/NavBar";
+import Pokemon from "./components/Pokemon";
 
 function App() {
   return (
-    <div className={styles.App}>
-      <h1>PI Pokemon</h1>
-    </div>
+    <Fragment>
+      <div className={styles.App}>
+        <NavBar />
+      </div>
+
+      <Pokemon />
+    </Fragment>
   );
 }
 
