@@ -1,0 +1,12 @@
+@import url('./normalize.css');
+
+.App{
+  font-family: 'Roboto', sans-serif;
+}
+
+.pokemons{
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 5px
+}

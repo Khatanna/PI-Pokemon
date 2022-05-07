@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, Op } = require("sequelize");
 
 module.exports = (sequelize) => {
   sequelize.define("pokemon", {
@@ -11,6 +11,7 @@ module.exports = (sequelize) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     attack: {
       type: DataTypes.INTEGER,

@@ -2,17 +2,23 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import store from "./redux/store";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import App from "./App";
+import Home from "./components/Home";
+import Form from "./components/Form";
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router>
+    <BrowserRouter>
       <React.StrictMode>
-        <App />
+        <Routes>
+          <Route index element={<App />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/create" element={<Form />} />
+        </Routes>
       </React.StrictMode>
-    </Router>
+    </BrowserRouter>
   </Provider>,
   document.getElementById("root")
 );

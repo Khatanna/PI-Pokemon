@@ -18,9 +18,3 @@
   background-color: rgb(38, 144, 38);
   color: white;
 }
-.logo{
-  display: flex;
-  height: 100%;
-  gap: 20px;
-  font-size: 0.8em;
-}
