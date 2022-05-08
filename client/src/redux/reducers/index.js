@@ -12,12 +12,14 @@ export default function reducer(state = initialState, { type, payload }) {
     case types.GET_POKEMON:
       return {
         ...state,
-        pokemons: [...state.pokemons, payload],
+        pokemon: payload,
       };
     case types.GET_POKEMON_LIST:
       return {
         ...state,
-        pokemonList: payload.results,
+        pokemonList: [...state.pokemonList, payload].sort(
+          (a, b) => a.id - b.id
+        ),
       };
     case types.GET_TYPES:
       return {
@@ -25,6 +27,16 @@ export default function reducer(state = initialState, { type, payload }) {
         types: payload,
       };
     case types.CREATE_POKEMON:
+      return {
+        ...state,
+        pokemon: payload,
+      };
+    case types.GET_POKEMON_BY_NAME:
+      return {
+        ...state,
+        pokemon: payload,
+      };
+    case types.GET_POKEMON_BY_ID:
       return {
         ...state,
         pokemon: payload,

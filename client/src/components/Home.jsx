@@ -3,7 +3,7 @@ import styles from "../styles/Home.module.css";
 import NavBar from "./NavBar";
 import { useDispatch, useSelector } from "react-redux";
 import { getPokemonList } from "../redux/actions";
-import Pokemon from "./Pokemon";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -17,12 +17,24 @@ export default function Home() {
       <div className={styles.App}>
         <NavBar />
         <div className={styles.pokemons}>
-          {listOfPokemon.map((pokemon, index) => (<Pokemon
-              key={index}
-              name={pokemon.name}
-              id={index + 1}
-            />))}
+          {listOfPokemon.map((pokemon) => {
+            let type = pokemon.types[0].type.name;
+            return (
+              <div className={styles[type] + " " + styles.pokemon}>
+                <Link to={`${pokemon.id}`} className={styles.link}>
+                  <div>{pokemon.name}</div>
+                  <img src={pokemon.sprites.front_default} alt="" />
+                  <div>{type}</div>
+                </Link>
+              </div>
+            );
+          })}
         </div>
+        <select name="" id="">
+          <option value="">Filtrar por nombre [A-Z]</option>
+          <option value="">Filtrar por tipo</option>
+          <option value="">Filtrar por daño</option>
+        </select>
       </div>
     </Fragment>
   );

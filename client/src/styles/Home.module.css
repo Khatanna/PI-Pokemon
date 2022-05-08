@@ -8,5 +8,59 @@
   display: flex;
   width: 100%;
   flex-wrap: wrap;
-  gap: 5px
+  justify-content: center;
+  
+  gap: 5px;
+  margin: 20px 0;
+}
+
+.pokemon{
+  display: flex;
+  width: 250px;
+  justify-content: center;
+  align-items: center;
+  height: 250px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.grass{
+  border:1px solid rgb(221, 61, 61);
+}
+
+.fire{
+  border:1px solid orange;
+}
+
+.water{
+  border:1px solid rgb(0, 187, 255);
+}
+
+.bug{
+  border:1px solid rgb(40, 180, 40);
+}
+
+.normal{
+  border:1px solid gray;
+}
+
+.poison{
+  border:1px solid rgb(144, 65, 144);
+}
+
+.electric{
+  border:1px solid yellow;
+}
+
+.ground{
+  border:1px solid brown;
+}
+
+.fairy{
+  border:1px solid pink;
+}
+
+.link{
+  color: black;
+  text-decoration: none;
 }

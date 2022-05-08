@@ -13,14 +13,42 @@ export const getPokemon = (url) => {
   };
 };
 
-export const getPokemonList = () => {
+export const getPokemonByName = (name) => {
   return async (dispatch) => {
-    const respose = await fetch(`${URL}/pokemons/`);
-    const data = await respose.json();
+    const response = await fetch(`${URL}/pokemons?name=${name}`);
+    const data = await response.json();
     dispatch({
-      type: types.GET_POKEMON_LIST,
+      type: types.GET_POKEMON_BY_NAME,
       payload: data,
     });
+  };
+};
+
+export const getPokemonById = (id) => {
+  return async (dispatch) => {
+    const response = await fetch(`${URL}/pokemons/${id}`);
+    const data = await response.json();
+    dispatch({
+      type: types.GET_POKEMON_BY_ID,
+      payload: data,
+    });
+  };
+};
+
+export const getPokemonList = () => {
+  return async (dispatch) => {
+    const response = await fetch(`${URL}/pokemons`);
+    const data = await response.json();
+    //console.log(data);
+    for (let i = 0; i < data.results.length; i++) {
+      const pokemon = await fetch(data.results[i].url);
+      const pokemonData = await pokemon.json();
+      console.log(pokemon);
+      dispatch({
+        type: types.GET_POKEMON_LIST,
+        payload: pokemonData,
+      });
+    }
   };
 };
 

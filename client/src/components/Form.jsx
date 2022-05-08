@@ -21,8 +21,12 @@ function validateForm(data) {
     errors.speed = "La velocidad es obligatoria";
   }
 
-  if (!data.hp) {
-    errors.hp = "El hp es obligatorio";
+  if (!data.height) {
+    errors.height = "La altura es obligatoria";
+  }
+
+  if (!data.weight) {
+    errors.weight = "El peso es obligatorio";
   }
 
   return errors;
@@ -64,7 +68,7 @@ export default function Form() {
     );
 
     console.log(Object.keys(error).length);
-    if (Object.keys(error).length !== 0) {
+    if (Object.keys(error).length === 0) {
       try {
         dispatch(createPokemon(form));
       } catch (e) {
@@ -92,7 +96,7 @@ export default function Form() {
         <div className={styles.field}>
           <label htmlFor="name">Name: </label>
           <input
-            className={error.name && "danger"}
+            className={error.name && styles.danger}
             id="name"
             type="text"
             placeholder="name"
@@ -100,11 +104,12 @@ export default function Form() {
             value={form.name}
             onChange={handleChange}
           />
-          {error.name && <p className="danger">{error.name}</p>}
         </div>
+        {error.name && <p className={styles.danger}>{error.name}</p>}
         <div className={styles.field}>
           <label htmlFor="attack">Attack: </label>
           <input
+            className={error.attack && styles.danger}
             id="attack"
             type="text"
             placeholder="attack"
@@ -113,9 +118,11 @@ export default function Form() {
             onChange={handleChange}
           />
         </div>
+        {error.attack && <p className={styles.danger}>{error.attack}</p>}
         <div className={styles.field}>
           <label htmlFor="defense">Defense: </label>
           <input
+            className={error.defense && styles.danger}
             id="defense"
             type="text"
             placeholder="defense"
@@ -124,9 +131,11 @@ export default function Form() {
             onChange={handleChange}
           />
         </div>
+        {error.defense && <p className={styles.danger}>{error.defense}</p>}
         <div className={styles.field}>
           <label htmlFor="speed">Speed: </label>
           <input
+            className={error.speed && styles.danger}
             id="speed"
             type="text"
             placeholder="speed"
@@ -135,9 +144,11 @@ export default function Form() {
             onChange={handleChange}
           />
         </div>
+        {error.speed && <p className={styles.danger}>{error.speed}</p>}
         <div className={styles.field}>
           <label htmlFor="height">Height: </label>
           <input
+            className={error.height && styles.danger}
             id="height"
             type="text"
             placeholder="height"
@@ -146,9 +157,11 @@ export default function Form() {
             onChange={handleChange}
           />
         </div>
+        {error.height && <p className={styles.danger}>{error.height}</p>}
         <div className={styles.field}>
           <label htmlFor="weight">Weight: </label>
           <input
+            className={error.weight && styles.danger}
             id="weight"
             type="text"
             placeholder="weight"
@@ -157,6 +170,7 @@ export default function Form() {
             onChange={handleChange}
           />
         </div>
+        {error.weight && <p className={styles.danger}>{error.weight}</p>}
         <button>Crear</button>
       </form>
     </Fragment>

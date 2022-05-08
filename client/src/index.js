@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
 import Home from "./components/Home";
 import Form from "./components/Form";
+import Pokemon from "./components/Pokemon";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -16,6 +17,7 @@ ReactDOM.render(
           <Route index element={<App />} />
           <Route path="/home" element={<Home />} />
           <Route path="/create" element={<Form />} />
+          <Route path="/home/:id" element={<Pokemon />} />
         </Routes>
       </React.StrictMode>
     </BrowserRouter>

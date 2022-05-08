@@ -1,45 +1,98 @@
 const { Router } = require("express");
-const { Pokemon, Op } = require("../db.js");
+const { Pokemons, Pokemon, Type, Op } = require("../db.js");
 const router = Router();
 const API_URL = require("./API_KEY.js");
 const axios = require("axios");
 const status = require("./status.js");
 
+(async () => {
+  try {
+    let response = await axios.get(`${API_URL}/pokemon`);
+    let { data } = response;
+    let next = null;
+
+    do {
+      data.results.forEach(async ({ name, url }) => {
+        await Pokemons.findOrCreate({
+          where: {
+            name,
+          },
+          defaults: {
+            url,
+          },
+        });
+      });
+      next = data.next;
+      if (next) {
+        response = await axios.get(next);
+        data = response.data;
+      }
+    } while (next);
+    console.log("Pokemons cargados");
+  } catch (error) {
+    console.log(error);
+  }
+})();
+
 router.get("/", async (req, res, next) => {
   if (req.query.name) {
-    next();
+    return next();
+  }
+  const { page, limit } = req.query;
+  if (!page) {
+    return res.redirect("/pokemons?page=1");
   }
   try {
-    const response = await axios.get(`${API_URL}/pokemon`);
-    const pokemon = response.data;
-    const pokemons = await Pokemon.findAll();
-    console.log(pokemons);
-    pokemon.results.push(...pokemons);
-    res.json(pokemon);
+    const pokemons = await Pokemons.findAll({
+      offset: (page - 1) * (limit || 40),
+      limit: +limit || 40,
+      order: [["id", "ASC"]],
+    });
+    if (page > Math.ceil(1126 / limit)) {
+      return res.status(404).send("Para emoción");
+    }
+    if (limit) {
+      return res.json({
+        page: Number(page),
+        next:
+          page >= Math.ceil(1126 / limit)
+            ? null
+            : `http://localhost:3001/pokemons?page=${+page + 1}&limit=${limit}`,
+        previous:
+          page == 1
+            ? null
+            : `http://localhost:3001/pokemons?page=${+page - 1}&limit=${limit}`,
+        results: pokemons,
+      });
+    } else {
+      return res.json({
+        page: Number(page),
+        next:
+          page >= 29
+            ? null
+            : `http://localhost:3001/pokemons?page=${+page + 1}`,
+        previous:
+          page == 1 ? null : `http://localhost:3001/pokemons?page=${+page - 1}`,
+        results: pokemons,
+      });
+    }
   } catch (error) {
-    res.send("Error");
+    res.status(status.BAD_REQUEST).send(error);
   }
 });
 
-router.get("/", async (req, res, next) => {
+router.get("/", async (req, res) => {
   const { name } = req.query;
-  if (!name) {
-    next();
-  }
+
   try {
-    const pokemon = await Pokemon.findOne({
+    const pokemon = await Pokemons.findOne({
       where: {
         name: {
           [Op.eq]: name,
         },
       },
     });
-    if (!pokemon) {
-      return res.status(status.NOT_FOUND).json({
-        message: "Pokemon not found",
-      });
-    }
-    return res.status(status.OK).json(pokemon);
+    res.status(status.OK).json(pokemon);
   } catch (error) {
     res.status(status.NOT_FOUND).send({
       message: "Pokemon not found",
@@ -50,25 +103,11 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
-    const pokemon = await Pokemon.findByPk(id);
-    if (!pokemon) {
-      return next(error);
-    }
+    const pokemon = await Pokemons.findByPk(id);
     return res.status(status.OK).json(pokemon);
   } catch (error) {
-    return next();
-  }
-});
-
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const response = await axios.get(`${API_URL}/pokemon/${id}`);
-    const pokemon = response.data;
-    return res.status(status.OK).json(pokemon);
-  } catch (error) {
-    return res.status(status.NOT_FOUND).json({
-      message: `Error: Pokemon no encontrado ;(`,
+    return res.status(status.NOT_FOUND).send({
+      message: "Pokemon not found",
     });
   }
 });
