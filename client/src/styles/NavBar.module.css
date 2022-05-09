@@ -15,3 +15,8 @@
     gap: 20px;
     font-size: 0.8em;
 }
+
+.link {
+    color: black;
+    text-decoration: none;
+}

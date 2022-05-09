@@ -17,9 +17,7 @@ export default function reducer(state = initialState, { type, payload }) {
     case types.GET_POKEMON_LIST:
       return {
         ...state,
-        pokemonList: [...state.pokemonList, payload].sort(
-          (a, b) => a.id - b.id
-        ),
+        pokemonList: payload,
       };
     case types.GET_TYPES:
       return {

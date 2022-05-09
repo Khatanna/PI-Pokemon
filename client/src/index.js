@@ -8,11 +8,13 @@ import App from "./App";
 import Home from "./components/Home";
 import Form from "./components/Form";
 import Pokemon from "./components/Pokemon";
+import NavBar from "./components/NavBar";
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <React.StrictMode>
+        <NavBar />
         <Routes>
           <Route index element={<App />} />
           <Route path="/home" element={<Home />} />

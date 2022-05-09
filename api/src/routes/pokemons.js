@@ -38,7 +38,10 @@ router.get("/", async (req, res, next) => {
   if (req.query.name) {
     return next();
   }
-  const { page, limit } = req.query;
+  const { page, limit, filter } = req.query;
+  if (filter) {
+    return next();
+  }
   if (!page) {
     return res.redirect("/pokemons?page=1");
   }
@@ -76,6 +79,24 @@ router.get("/", async (req, res, next) => {
         results: pokemons,
       });
     }
+  } catch (error) {
+    res.status(status.BAD_REQUEST).send(error);
+  }
+});
+
+router.get("/", async (req, res, next) => {
+  const { filter } = req.query;
+  if (!filter) {
+    return next();
+  }
+  try {
+    const pokemons = await Pokemons.findAll({
+      limit: 20,
+      order: [["name", "ASC"]],
+    });
+    return res.json({
+      results: pokemons,
+    });
   } catch (error) {
     res.status(status.BAD_REQUEST).send(error);
   }

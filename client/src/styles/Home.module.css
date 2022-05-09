@@ -1,66 +1,167 @@
 @import url('./normalize.css');
 
-.App{
+.App {
   font-family: 'Roboto', sans-serif;
 }
 
-.pokemons{
+.pokemons {
   display: flex;
   width: 100%;
   flex-wrap: wrap;
   justify-content: center;
-  
   gap: 5px;
   margin: 20px 0;
 }
 
-.pokemon{
+.link {
   display: flex;
   width: 250px;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
   height: 250px;
-  border-radius: 3px;
   text-align: center;
 }
 
-.grass{
-  border:1px solid rgb(221, 61, 61);
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  gap: 5px;
 }
 
-.fire{
-  border:1px solid orange;
+.pagination input {
+  width: 50px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
 }
 
-.water{
-  border:1px solid rgb(0, 187, 255);
+.pagination button {
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
-.bug{
-  border:1px solid rgb(40, 180, 40);
+.filter {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 20px 0;
 }
 
-.normal{
-  border:1px solid gray;
+.normal {
+  border: 1px solid gray;
 }
 
-.poison{
-  border:1px solid rgb(144, 65, 144);
+.fighting {
+  border: 1px solid rgb(72, 5, 17);
 }
 
-.electric{
-  border:1px solid yellow;
+.flying {
+  border: 1px solid rgb(0, 0, 255);
 }
 
-.ground{
-  border:1px solid brown;
+.poison {
+  border: 1px solid rgb(144, 65, 144);
 }
 
-.fairy{
-  border:1px solid pink;
+.ground {
+  border: 1px solid brown;
 }
 
-.link{
+.rock {
+  border: 1px solid rgb(102, 102, 102);
+}
+
+.bug {
+  border: 1px solid rgb(40, 180, 40);
+}
+
+.ghost {
+  border: 1px solid rgb(153, 153, 153);
+}
+
+.steel {
+  border: 1px solid rgb(102, 102, 102);
+}
+
+.fire {
+  border: 1px solid orange;
+}
+
+.water {
+  border: 1px solid rgb(0, 187, 255);
+}
+
+
+.grass {
+  border: 1px solid rgb(221, 61, 61);
+  transition: all 0.3s;
+}
+
+.grass:hover {
+  background-color: rgba(221, 61, 61, 0.412);
+}
+
+.electric {
+  border: 1px solid yellow;
+}
+
+.psychic {
+  border: 1px solid rgb(255, 0, 255);
+}
+
+.ice {
+  border: 1px solid rgb(0, 255, 255);
+}
+
+.dragon {
+  border: 1px solid rgb(0, 0, 255);
+}
+
+.dark {
+  border: 1px solid rgb(0, 0, 0);
+}
+
+.fairy {
+  border: 1px solid pink;
+}
+
+.unknown {
+  border: 1px solid rgb(255, 255, 255);
+}
+
+.shadow {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.normal,
+.fighting,
+.flying,
+.poison,
+.ground,
+.rock,
+.bug,
+.ghost,
+.steel,
+.fire,
+.water,
+.grass,
+.electric,
+.psychic,
+.ice,
+.dragon,
+.dark,
+.fairy,
+.unknown,
+.shadow {
+  border-radius: 6px;
+}
+
+.link {
   color: black;
   text-decoration: none;
 }
