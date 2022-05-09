@@ -3,8 +3,21 @@ import SearchBar from "./SearchBar";
 import styles from "../styles/NavBar.module.css";
 import logo from "../assets/pokeball.png";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getPokemonList, setOrderBy } from "../redux/actions";
 
 export default function NavBar() {
+  const dispatch = useDispatch();
+  const page = useSelector((state) => state.page);
+  const orderBy = useSelector((state) => state.orderBy);
+  const handleOption = (e) => {
+    e.preventDefault();
+    if (e.target.value === "attack") {
+      dispatch(setOrderBy("attack"));
+      dispatch(getPokemonList(page, orderBy, true));
+    }
+  };
+
   return (
     <Fragment>
       <div className={styles["nav-container"]}>
@@ -18,10 +31,10 @@ export default function NavBar() {
           Crear pokemon
         </Link>
         <div className={styles.filter}>
-          <select name="" id="">
-            <option value="">Filtrar por nombre [A-Z]</option>
-            <option value="">Filtrar por tipo</option>
-            <option value="">Filtrar por daño</option>
+          <select name="" id="" onChange={handleOption}>
+            <option value="name">Filtrar por nombre [A-Z]</option>
+            <option value="type">Filtrar por tipo</option>
+            <option value="attack">Filtrar por daño</option>
           </select>
         </div>
         <SearchBar />

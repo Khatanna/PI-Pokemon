@@ -39,7 +39,7 @@ router.get("/", async (req, res, next) => {
     return next();
   }
   const { page, limit, filter } = req.query;
-  if (filter) {
+  if (page && filter) {
     return next();
   }
   if (!page) {
@@ -85,16 +85,28 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/", async (req, res, next) => {
-  const { filter } = req.query;
-  if (!filter) {
+  const { page, filter } = req.query;
+  console.log(page, filter);
+  if (!filter || !page) {
     return next();
   }
   try {
     const pokemons = await Pokemons.findAll({
-      limit: 20,
-      order: [["name", "ASC"]],
+      offset: (page - 1) * 40,
+      limit: 40,
+      order: [[filter, "ASC"]],
     });
     return res.json({
+      page: Number(page),
+      next:
+        page >= Math.ceil(1126 / 40)
+          ? null
+          : `http://localhost:3001/pokemons?page=${+page + 1}&filter=${filter}`,
+      previous:
+        page == 1
+          ? null
+          : `http://localhost:3001/pokemons?page=${+page - 1}&filter=${filter}`,
+
       results: pokemons,
     });
   } catch (error) {

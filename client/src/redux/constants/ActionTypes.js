@@ -1,7 +1,9 @@
 export const GET_POKEMON = "GET_POKEMON";
 export const GET_POKEMON_LIST = "GET_POKEMON_LIST";
-export const GET_40_POKEMON = "GET_40_POKEMON";
 export const GET_TYPES = "GET_TYPES";
 export const CREATE_POKEMON = "CREATE_POKEMON";
 export const GET_POKEMON_BY_NAME = "GET_POKEMON_BY_NAME";
 export const GET_POKEMON_BY_ID = "GET_POKEMON_BY_ID";
+export const SET_NEXT_PAGE = "SET_NEXT_PAGE";
+export const SET_PREVIOUS_PAGE = "SET_PREVIOUS_PAGE";
+export const SET_ORDER_BY = "SET_ORDER_BY";

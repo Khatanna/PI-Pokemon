@@ -4,7 +4,8 @@ const initialState = {
   pokemonList: [],
   types: [],
   pokemon: {},
-  pokemons: [],
+  page: 1,
+  orderBy: "",
 };
 
 export default function reducer(state = initialState, { type, payload }) {
@@ -38,6 +39,21 @@ export default function reducer(state = initialState, { type, payload }) {
       return {
         ...state,
         pokemon: payload,
+      };
+    case types.SET_NEXT_PAGE:
+      return {
+        ...state,
+        page: payload,
+      };
+    case types.SET_PREVIOUS_PAGE:
+      return {
+        ...state,
+        page: payload,
+      };
+    case types.SET_ORDER_BY:
+      return {
+        ...state,
+        orderBy: payload,
       };
     default:
       return state;

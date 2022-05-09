@@ -1,41 +1,21 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import styles from "../styles/Home.module.css";
-import NavBar from "./NavBar";
 import { useDispatch, useSelector } from "react-redux";
 import { getPokemonList } from "../redux/actions";
 import { Link } from "react-router-dom";
+import Paginator from "./Paginator";
 
 export default function Home() {
-  const [page, setPage] = useState(1);
-  const [input, setInput] = useState("");
   const dispatch = useDispatch();
   const listOfPokemon = useSelector((state) => state.pokemonList);
+  const page = useSelector((state) => state.page);
+  const orderBy = useSelector((state) => state.orderBy);
   useEffect(() => {
-    dispatch(getPokemonList(page));
-
+    dispatch(getPokemonList(page, orderBy));
     return () => {
-      dispatch(getPokemonList(1));
+      dispatch(getPokemonList(1, "", true));
     };
-  }, [dispatch, page]);
-
-  const handlePage = (e) => {
-    if (e.target.id === "next") {
-      setPage(page + 1);
-    } else {
-      setPage(page - 1);
-    }
-  };
-  const goPage = () => {
-    if (input === "") {
-      setPage(1);
-    } else if (+input > Math.ceil(1126 / 40)) {
-      alert("Page does not exist");
-    } else {
-      setPage(+input);
-      setInput("");
-      dispatch(getPokemonList(input));
-    }
-  };
+  }, [dispatch, page, orderBy]);
 
   return (
     <Fragment>
@@ -52,28 +32,13 @@ export default function Home() {
                   <div>{pokemon.name}</div>
                   <img src={pokemon.sprites.front_default} alt="" />
                   <div>Type: {type}</div>
+                  <div>Attack: {pokemon.stats[1].base_stat}</div>
                 </Link>
               </div>
             );
           })}
         </div>
-        <div className={styles.pagination}>
-          {page > 1 ? (
-            <button onClick={handlePage}>Previous</button>
-          ) : (
-            <button disabled>Previous</button>
-          )}
-          <b>{page}</b>
-          <button onClick={handlePage} id={"next"}>
-            Next
-          </button>
-          <input
-            type="number"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <button onClick={goPage}>Ir</button>
-        </div>
+        <Paginator />
       </div>
     </Fragment>
   );

@@ -35,8 +35,12 @@ export const getPokemonById = (id) => {
   };
 };
 
-export const getPokemonList = (page = 1) => {
+export const getPokemonList = (page = 1, orderBy, ascedent = true) => {
   const results = [];
+  const stats = {
+    attack: 1,
+    defense: 2,
+  };
   return async (dispatch) => {
     const response = await fetch(`${URL}/pokemons?page=${page}`);
     const data = await response.json();
@@ -44,6 +48,14 @@ export const getPokemonList = (page = 1) => {
       const pokemon = await fetch(data.results[i].url);
       results.push(await pokemon.json());
     }
+    if (orderBy && ascedent) {
+      results.sort((a, b) => {
+        return (
+          a.stats[stats[orderBy]].base_stat - b.stats[stats[orderBy]].base_stat
+        );
+      });
+    }
+
     dispatch({
       type: types.GET_POKEMON_LIST,
       payload: results,
@@ -80,18 +92,23 @@ export const createPokemon = (pokemon) => {
   };
 };
 
-// export const get40Pokemon = (limit) => {
-//   const pokemons = [];
-//   pokemons.length = limit;
-//   pokemons.fill(null);
-//   return async (dispatch) => {
-//     pokemons.forEach(async (_, index) => {
-//       const response = await fetch(`${URL}${index + 1}`);
-//       const data = await response.json();
-//       dispatch({
-//         type: types.GET_40_POKEMON,
-//         payload: data,
-//       });
-//     });
-//   };
-// };
+export const setNextPage = (page) => {
+  return {
+    type: types.SET_NEXT_PAGE,
+    payload: page,
+  };
+};
+
+export const setPreviousPage = (page) => {
+  return {
+    type: types.SET_PREVIOUS_PAGE,
+    payload: page,
+  };
+};
+
+export const setOrderBy = (orderBy) => {
+  return {
+    type: types.SET_ORDER_BY,
+    payload: orderBy,
+  };
+};
