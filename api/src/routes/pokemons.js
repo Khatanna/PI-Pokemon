@@ -32,7 +32,7 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/", async (req, res) => {
-  const { page, limit } = req.query;
+  const { page, limit, filter, order } = req.query;
   if (!page || !limit) {
     return res.redirect("/pokemons?page=1&limit=12");
   }
@@ -49,7 +49,13 @@ router.get("/", async (req, res) => {
         message: "Page not found",
       });
     }
-
+    const response = [...oneResult, ...twoResult];
+    if (filter == "name" && order == "asc") {
+      response.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    if(filter == 'name' && order == 'desc') {
+      response.sort((a, b) => b.name.localeCompare(a.name));
+    }
     return res.json({
       page: +page,
       next:
@@ -60,7 +66,7 @@ router.get("/", async (req, res) => {
         page == 1
           ? null
           : `http://localhost:3001/pokemons?page=${+page - 1}&limit=${limit}`,
-      results: [...oneResult, ...twoResult].slice(
+      results: response.slice(
         (page - 1) * limit,
         page * limit
       ),

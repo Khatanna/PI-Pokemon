@@ -6,9 +6,11 @@ export default function Filter() {
     <Fragment>
       <div className={styles["filter-container"]}>
         <select name="" id="" className={styles.filter}>
-          <option value="name">Filtrar por nombre [A-Z]</option>
-          <option value="type">Filtrar por tipo</option>
-          <option value="attack">Filtrar por daño</option>
+          <option value="name">filter of name [A-Z]</option>
+          <option value="type">filter of name [Z-A]</option>
+          <option value="attack">filter of attack</option>
+          <option value="created">created by you</option>
+          <option value="created">for types</option>
         </select>
       </div>
     </Fragment>

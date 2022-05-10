@@ -11,6 +11,7 @@ export default function Home() {
   const state = useSelector((state) => state);
   const { pokemonList, page } = state;
   const [pending, setPending] = useState(true);
+  
   useEffect(() => {
     dispatch(getPokemonList(page));
     setPending(true);
@@ -25,7 +26,12 @@ export default function Home() {
           <div>
             <div className={styles.pokemons}>
               {pokemonList.map((pokemon) => {
-                let type = pokemon.types[0].type.name;
+                let type = "";
+                if(pokemon.types.length == 1){
+                  type = pokemon.types[0].type.name;
+                }else{
+                  type = pokemon.types[0].type.name + "_" + pokemon.types[1].type.name;
+                }
                 return (
                   <div
                     className={styles[type] + " " + styles.pokemon}
@@ -34,7 +40,7 @@ export default function Home() {
                     <Link to={`${pokemon.id}`} className={styles.link}>
                       <div>{pokemon.name}</div>
                       <img src={pokemon.sprites.front_default} alt="" />
-                      <div>Type: {type}</div>
+                      <div>Type: {type.replace('_', ' ')}</div>
                       <div>Attack: {pokemon.stats[1].base_stat}</div>
                     </Link>
                   </div>

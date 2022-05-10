@@ -283,3 +283,8 @@ hr{
   color: black;
   text-decoration: none;
 }
+
+.grass_poison{
+  border: 1px solid rgb(221, 61, 61);
+  border-radius: 6px;
+}

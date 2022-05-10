@@ -28,7 +28,7 @@ export default function NavBar() {
           </div>
         </Link>
         <Link to="/create" className={styles.link}>
-          Crear pokemon
+          create pokemon
         </Link>
         <SearchBar />
       </div>
