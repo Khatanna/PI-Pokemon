@@ -30,13 +30,6 @@ export default function NavBar() {
         <Link to="/create" className={styles.link}>
           Crear pokemon
         </Link>
-        <div className={styles.filter}>
-          <select name="" id="" onChange={handleOption}>
-            <option value="name">Filtrar por nombre [A-Z]</option>
-            <option value="type">Filtrar por tipo</option>
-            <option value="attack">Filtrar por daño</option>
-          </select>
-        </div>
         <SearchBar />
       </div>
     </Fragment>

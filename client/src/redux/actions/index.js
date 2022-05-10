@@ -2,17 +2,6 @@ import * as types from "../constants/ActionTypes.js";
 
 const URL = "http://localhost:3001";
 
-export const getPokemon = (url) => {
-  return async (dispatch) => {
-    const response = await fetch(url);
-    const data = await response.json();
-    dispatch({
-      type: types.GET_POKEMON,
-      payload: data,
-    });
-  };
-};
-
 export const getPokemonByName = (name) => {
   return async (dispatch) => {
     const response = await fetch(`${URL}/pokemons?name=${name}`);
@@ -35,27 +24,15 @@ export const getPokemonById = (id) => {
   };
 };
 
-export const getPokemonList = (page = 1, orderBy, ascedent = true) => {
+export const getPokemonList = (page = 1) => {
   const results = [];
-  const stats = {
-    attack: 1,
-    defense: 2,
-  };
   return async (dispatch) => {
-    const response = await fetch(`${URL}/pokemons?page=${page}`);
+    const response = await fetch(`${URL}/pokemons?page=${page}&limit=12`);
     const data = await response.json();
     for (let i = 0; i < data.results.length; i++) {
       const pokemon = await fetch(data.results[i].url);
       results.push(await pokemon.json());
     }
-    if (orderBy && ascedent) {
-      results.sort((a, b) => {
-        return (
-          a.stats[stats[orderBy]].base_stat - b.stats[stats[orderBy]].base_stat
-        );
-      });
-    }
-
     dispatch({
       type: types.GET_POKEMON_LIST,
       payload: results,
@@ -92,16 +69,9 @@ export const createPokemon = (pokemon) => {
   };
 };
 
-export const setNextPage = (page) => {
+export const setPage = (page) => {
   return {
-    type: types.SET_NEXT_PAGE,
-    payload: page,
-  };
-};
-
-export const setPreviousPage = (page) => {
-  return {
-    type: types.SET_PREVIOUS_PAGE,
+    type: types.SET_PAGE,
     payload: page,
   };
 };

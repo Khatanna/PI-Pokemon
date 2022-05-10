@@ -5,29 +5,30 @@ import { createPokemon } from "../redux/actions";
 
 function validateForm(data) {
   const errors = {};
-  if (!data.name) {
-    errors.name = "El nombre es obligatorio";
-  }
+  // if (!data.name) {
+  //   errors.name = "El nombre es obligatorio";
+  // }
 
-  if (!data.attack) {
-    errors.attack = "El ataque es obligatorio";
-  }
+  // if (!data.attack) {
+  //   errors.attack = "El ataque es obligatorio";
+  // }
 
-  if (!data.defense) {
-    errors.defense = "La defensa es obligatoria";
-  }
+  // if (!data.defense) {
+  //   errors.defense = "La defensa es obligatoria";
+  // }
 
-  if (!data.speed) {
-    errors.speed = "La velocidad es obligatoria";
-  }
+  // if (!data.speed) {
+  //   errors.speed = "La velocidad es obligatoria";
+  // }
 
-  if (!data.height) {
-    errors.height = "La altura es obligatoria";
-  }
+  // if (!data.height) {
+  //   errors.height = "La altura es obligatoria";
+  // }
 
-  if (!data.weight) {
-    errors.weight = "El peso es obligatorio";
-  }
+  // if (!data.weight) {
+  //   errors.weight = "El peso es obligatorio";
+  // }
+  console.log(data);
 
   return errors;
 }
@@ -67,7 +68,6 @@ export default function Form() {
       })
     );
 
-    console.log(Object.keys(error).length);
     if (Object.keys(error).length === 0) {
       try {
         dispatch(createPokemon(form));
@@ -171,7 +171,7 @@ export default function Form() {
           />
         </div>
         {error.weight && <p className={styles.danger}>{error.weight}</p>}
-        <button>Crear</button>
+        <button>Crear Pokemon</button>
       </form>
     </Fragment>
   );

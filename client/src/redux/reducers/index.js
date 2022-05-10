@@ -40,12 +40,7 @@ export default function reducer(state = initialState, { type, payload }) {
         ...state,
         pokemon: payload,
       };
-    case types.SET_NEXT_PAGE:
-      return {
-        ...state,
-        page: payload,
-      };
-    case types.SET_PREVIOUS_PAGE:
+    case types.SET_PAGE:
       return {
         ...state,
         page: payload,

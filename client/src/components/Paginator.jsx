@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setNextPage, setPreviousPage } from "../redux/actions";
+import { setPage } from "../redux/actions";
 import styles from "../styles/Paginator.module.css";
 
 export default function Paginator() {
@@ -9,36 +9,51 @@ export default function Paginator() {
   const page = useSelector((state) => state.page);
 
   const handlePage = (e) => {
-    if (e.target.id === "next") {
-      dispatch(setNextPage(page + 1));
-    } else {
-      dispatch(setPreviousPage(page - 1));
-    }
+    const options = {
+      next: () => dispatch(setPage(page + 1)),
+      previous: () => dispatch(setPage(page - 1)),
+    };
+    options[e.target.id]();
   };
   const goPage = () => {
     if (input === "") {
-      dispatch(setNextPage(page + 1));
-    } else if (+input > Math.ceil(1126 / 40)) {
+      dispatch(setPage(1));
+    } else if (+input > Math.ceil(40 / 12)) {
       alert("Page does not exist");
     } else {
-      dispatch(setNextPage(+input));
+      dispatch(setPage(+input));
+    }
+    setInput("");
+  };
+
+  useEffect(() => {
+    if (input < 1) {
       setInput("");
     }
-  };
+    if (input > Math.ceil(40 / 12)) {
+      setInput(Math.ceil(40 / 12));
+    }
+  }, [input]);
 
   return (
     <Fragment>
       <div>
         <div className={styles.pagination}>
           {page > 1 ? (
-            <button onClick={handlePage}>Previous</button>
+            <button onClick={handlePage} id="previous">
+              Previous
+            </button>
           ) : (
             <button disabled>Previous</button>
           )}
           <b>{page}</b>
-          <button onClick={handlePage} id={"next"}>
-            Next
-          </button>
+          {page < Math.ceil(40 / 12) ? (
+            <button onClick={handlePage} id="next">
+              Next
+            </button>
+          ) : (
+            <button disabled>Next</button>
+          )}
           <input
             type="number"
             value={input}
