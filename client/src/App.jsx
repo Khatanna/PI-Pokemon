@@ -11,9 +11,11 @@ function App() {
           <img src={logo} alt="" />
         </div>
         <div className={styles.start}>
-          <h1>PI de Pokimones</h1>
+          <h1>
+            <span className={styles.title}>PI - Pokemon</span>
+          </h1>
           <Link to="/home" className={styles.link}>
-            Vamo' a darle
+            Start!
           </Link>
         </div>
       </div>

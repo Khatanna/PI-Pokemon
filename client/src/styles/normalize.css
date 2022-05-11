@@ -347,3 +347,9 @@ template {
 [hidden] {
   display: none;
 }
+
+/*modify scroll*/
+::-webkit-scrollbar {
+  display: none;
+}
+

@@ -1,15 +1,26 @@
 .filter-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   border-radius: 3px;
   margin: 20px 80px;
   padding: 10px;
-
 }
 
 .filter{
   border: 1px solid rgba(128, 128, 128, 0.459);
   padding: 3px;
   border-radius: 3px;
+}
+
+.link {
+  color: black;
+  text-decoration: none;
+  border: 1px solid gray;
+  padding: 3px;
+  border-radius: 3px;
+}
+.link:hover{
+  background-color: rgb(128, 128, 128, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(128, 128, 128, 0.151);
 }

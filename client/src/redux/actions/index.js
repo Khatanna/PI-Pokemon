@@ -76,9 +76,63 @@ export const setPage = (page) => {
   };
 };
 
-export const setOrderBy = (orderBy) => {
+export const setOrder = (order) => {
   return {
-    type: types.SET_ORDER_BY,
-    payload: orderBy,
+    type: types.SET_ORDER,
+    payload: order,
   };
 };
+
+export const filterPokemonByName = (page = 1, typeOfFilter) => {
+  const results = [];
+  if (typeOfFilter.includes("name")) {
+    const [filter, order] = typeOfFilter.split("_");
+    return async (dispatch) => {
+      const response = await fetch(
+        `${URL}/pokemons?page=${page}&limit=12&filter=${filter}&order=${order}`
+      );
+      const data = await response.json();
+      for (let i = 0; i < data.results.length; i++) {
+        const pokemon = await fetch(data.results[i].url);
+        results.push(await pokemon.json());
+      }
+      dispatch({
+        type: types.FILTER_POKEMON_BY_NAME,
+        payload: results,
+      });
+    };
+  }
+  if (typeOfFilter.includes("attack")) {
+    const [, order] = typeOfFilter.split("_");
+    return async (dispatch) => {
+      const response = await fetch(`${URL}/pokemons?page=${page}&limit=12`);
+      const data = await response.json();
+      for (let i = 0; i < data.results.length; i++) {
+        const pokemon = await fetch(data.results[i].url);
+        results.push(await pokemon.json());
+      }
+      if (order === "asc") {
+        results.sort((a, b) => a.stats[1].base_stat - b.stats[1].base_stat);
+      } else {
+        results.sort((a, b) => b.stats[1].base_stat - a.stats[1].base_stat);
+      }
+      dispatch({
+        type: types.FILTER_POKEMON_BY_NAME,
+        payload: results,
+      });
+    };
+  }
+  return async (dispatch) => {
+    dispatch({
+      type: types.FILTER_POKEMON_BY_NAME,
+      payload: results,
+    });
+  };
+};
+
+export function pushInRecentSearch(pokemon) {
+  return {
+    type: types.PUSH_IN_RECENT_SEARCH,
+    payload: pokemon,
+  };
+}

@@ -1,16 +1,16 @@
-.nav-container{
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+.nav-container {
     background-color: #97e4cd;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
     width: 100%;
     padding: 5px 0;
     position: sticky;
     top: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
 }
 
-.logo{
+.logo {
     display: flex;
     height: 100%;
     gap: 20px;
@@ -20,4 +20,25 @@
 .link {
     color: black;
     text-decoration: none;
+}
+
+.home{
+    box-shadow: 0px 0px 10px 0px rgba(23, 114, 69, 0.2);
+    padding: 0 10px;
+    border: 1px solid #238445;
+    border-radius: 3px;
+}
+
+.links{
+    display: flex;
+    gap: 70px;
+    align-items: center;
+}
+
+.nav{
+    display: flex;
+    width: 87%;
+    padding: 5px;
+    justify-content: space-between;
+    align-items: center;
 }

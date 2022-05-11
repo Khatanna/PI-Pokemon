@@ -1,20 +1,21 @@
 import React, { Fragment, useState, useEffect } from "react";
 import styles from "../styles/SearchBar.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getPokemonByName } from "../redux/actions";
+import { getPokemonByName, pushInRecentSearch } from "../redux/actions";
 
 export default function SearchBar() {
   const [search, setSearch] = useState("");
+  const { pokemon } = useSelector((state) => state);
   const dispatch = useDispatch();
-  const pokemon = useSelector((state) => state.pokemon);
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(getPokemonByName(search));
     setSearch("");
   };
-
   useEffect(() => {
-    console.log(pokemon);
+    if (Object.keys(pokemon).length > 0) {
+      dispatch(pushInRecentSearch(pokemon));
+    }
   }, [pokemon]);
 
   return (

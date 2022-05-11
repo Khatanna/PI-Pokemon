@@ -1,56 +1,47 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getPokemonList } from "../redux/actions";
-import { Link } from "react-router-dom";
-import Paginator from "../components/Paginator";
+import { getPokemonList, filterPokemonByName } from "../redux/actions";
+
+import PokemonList from "./PokemonList";
+import Pokemon from "./Pokemon";
+import NavBar from "./NavBar";
 import Filter from "./Filter";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const state = useSelector((state) => state);
-  const { pokemonList, page } = state;
-  const [pending, setPending] = useState(true);
-  
+  const { page, order, pokemon } = useSelector((state) => state);
+  const length = Object.keys(pokemon).length;
   useEffect(() => {
-    dispatch(getPokemonList(page));
-    setPending(true);
-  }, [dispatch, page]);
+    if (length !== 0) {
+      return;
+    }
+    if (!order) {
+      return dispatch(getPokemonList(page));
+    } else {
+      return dispatch(filterPokemonByName(page, order));
+    }
+  }, [page, order, length]);
 
   return (
     <Fragment>
+      <NavBar />
       <div className={styles.App}>
         <Filter />
         <hr />
-        {pokemonList.length > 1 && pending ? (
-          <div>
-            <div className={styles.pokemons}>
-              {pokemonList.map((pokemon) => {
-                let type = "";
-                if(pokemon.types.length == 1){
-                  type = pokemon.types[0].type.name;
-                }else{
-                  type = pokemon.types[0].type.name + "_" + pokemon.types[1].type.name;
-                }
-                return (
-                  <div
-                    className={styles[type] + " " + styles.pokemon}
-                    key={pokemon.id}
-                  >
-                    <Link to={`${pokemon.id}`} className={styles.link}>
-                      <div>{pokemon.name}</div>
-                      <img src={pokemon.sprites.front_default} alt="" />
-                      <div>Type: {type.replace('_', ' ')}</div>
-                      <div>Attack: {pokemon.stats[1].base_stat}</div>
-                    </Link>
-                  </div>
-                );
-              })}
+        {length ? (
+          <Fragment>
+            <div className={styles["btn-volver"]}>
+              <button onClick={() => dispatch(getPokemonList(page))}>
+                Volver
+              </button>
             </div>
-            <Paginator />
-          </div>
+            <div className={styles.pokemon}>
+              <Pokemon pokemon={pokemon} />
+            </div>
+          </Fragment>
         ) : (
-          <div className={styles.loading}>Loading...</div>
+          <PokemonList />
         )}
       </div>
     </Fragment>

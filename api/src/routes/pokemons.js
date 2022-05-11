@@ -25,7 +25,7 @@ router.get("/", async (req, res, next) => {
       return res.json(data);
     }
   } catch (error) {
-    return res.status(status.BAD_REQUEST).json({
+    return res.status(status.NOT_FOUND).json({
       message: "Pokemon not found",
     });
   }
@@ -37,6 +37,12 @@ router.get("/", async (req, res) => {
     return res.redirect("/pokemons?page=1&limit=12");
   }
   try {
+    let url_next = `http://localhost:3001/pokemons?page=${
+      +page + 1
+    }&limit=${limit}`;
+    let url_previous = `http://localhost:3001/pokemons?page=${
+      +page - 1
+    }&limit=${limit}`;
     const {
       data,
       data: { results: oneResult },
@@ -52,24 +58,27 @@ router.get("/", async (req, res) => {
     const response = [...oneResult, ...twoResult];
     if (filter == "name" && order == "asc") {
       response.sort((a, b) => a.name.localeCompare(b.name));
+      url_next = `http://localhost:3001/pokemons?page=${
+        +page + 1
+      }&limit=${limit}&filter=name&order=asc`;
+      url_previous = `http://localhost:3001/pokemons?page=${
+        +page - 1
+      }&limit=${limit}&filter=name&order=asc`;
     }
-    if(filter == 'name' && order == 'desc') {
+    if (filter == "name" && order == "desc") {
       response.sort((a, b) => b.name.localeCompare(a.name));
+      url_next = `http://localhost:3001/pokemons?page=${
+        +page + 1
+      }&limit=${limit}&filter=name&order=desc`;
+      url_previous = `http://localhost:3001/pokemons?page=${
+        +page - 1
+      }&limit=${limit}&filter=name&order=desc`;
     }
     return res.json({
       page: +page,
-      next:
-        page == Math.ceil(40 / limit)
-          ? null
-          : `http://localhost:3001/pokemons?page=${+page + 1}&limit=${limit}`,
-      previous:
-        page == 1
-          ? null
-          : `http://localhost:3001/pokemons?page=${+page - 1}&limit=${limit}`,
-      results: response.slice(
-        (page - 1) * limit,
-        page * limit
-      ),
+      next: page == Math.ceil(40 / limit) ? null : url_next,
+      previous: page == 1 ? null : url_previous,
+      results: response.slice((page - 1) * limit, page * limit),
     });
   } catch (error) {
     return res.status(status.BAD_REQUEST).json({
@@ -102,14 +111,14 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { name, attack, defense, speed, height, weight } = req.body;
+  const { name, attack, defense, speed, height, weight, types } = req.body;
   if (!name || !attack || !defense || !speed || !height || !weight) {
     return res.status(status.BAD_REQUEST).json({
       message: "Missing parameters",
     });
   }
   try {
-    const [_, createPokemon] = await Pokemon.findOrCreate({
+    const pokemon = await Pokemon.findOrCreate({
       where: {
         name: {
           [Op.eq]: name,
@@ -124,18 +133,30 @@ router.post("/", async (req, res) => {
         weight,
       },
     });
-    if (createPokemon) {
-      return res.json({
-        message: "Pokemon created",
-      });
-    } else {
-      return res.status(status.BAD_REQUEST).json({
-        message: "Pokemon already exists",
-      });
-    }
+    const type = await Type.findAll({
+      where: {
+        name: {
+          [Op.in]: types,
+        },
+      },
+    });
+    console.log(type);
+    await pokemon[0].addTypes(type);
+
+    return res.json(pokemon);
+
+    // if (createPokemon) {
+    //   return res.status(status.CREATED).json({
+    //     message: "Pokemon created",
+    //   });
+    // } else {
+    //   return res.status(status.CONFLICT).json({
+    //     message: "Pokemon already exists",
+    //   });
+    // }
   } catch (error) {
     return res.status(status.NOT_FOUND).send({
-      message: error,
+      message: error.message,
     });
   }
 });

@@ -2,20 +2,17 @@ import * as types from "../constants/ActionTypes.js";
 
 const initialState = {
   pokemonList: [],
+  recentSearch: [],
   types: [],
   pokemon: {},
   page: 1,
-  orderBy: "",
+  order: "",
 };
 
 export default function reducer(state = initialState, { type, payload }) {
   switch (type) {
-    case types.GET_POKEMON:
-      return {
-        ...state,
-        pokemon: payload,
-      };
     case types.GET_POKEMON_LIST:
+      state.pokemon = {};
       return {
         ...state,
         pokemonList: payload,
@@ -31,6 +28,7 @@ export default function reducer(state = initialState, { type, payload }) {
         pokemon: payload,
       };
     case types.GET_POKEMON_BY_NAME:
+      state.pokemonList.length = 0;
       return {
         ...state,
         pokemon: payload,
@@ -41,14 +39,32 @@ export default function reducer(state = initialState, { type, payload }) {
         pokemon: payload,
       };
     case types.SET_PAGE:
+      state.pokemonList.length = 0;
       return {
         ...state,
         page: payload,
       };
-    case types.SET_ORDER_BY:
+    case types.FILTER_POKEMON_BY_NAME:
+      state.pokemonList.length = 0;
       return {
         ...state,
-        orderBy: payload,
+        pokemonList: payload,
+      };
+    case types.SET_ORDER:
+      state.pokemonList.length = 0;
+      return {
+        ...state,
+        order: payload,
+      };
+    case types.PUSH_IN_RECENT_SEARCH:
+      if (state.pokemon.message !== "Pokemon not found") {
+        return {
+          ...state,
+          recentSearch: [...state.recentSearch, payload],
+        };
+      }
+      return {
+        ...state,
       };
     default:
       return state;
