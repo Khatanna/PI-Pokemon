@@ -3,19 +3,27 @@ const { Type } = require("../db");
 const router = Router();
 const axios = require("axios");
 const url = "https://pokeapi.co/api/v2";
+const status = require("./status");
 
 router.get("/", async (req, res) => {
   try {
-    const response = await axios.get(`${url}/type`);
-    const data = response.data;
-    data.results.forEach(async (type) => {
-      await Type.create({
-        name: type.name,
+    const types = await Type.findAll();
+
+    if (types.length) {
+      return res.json(types);
+    } else {
+      const { data } = await axios.get(`${url}/type`);
+      data.results.forEach(async ({ name }) => {
+        await Type.create({
+          name,
+        });
       });
-    });
-    res.json(data);
+      return res.json(data);
+    }
   } catch (error) {
-    console.log(error);
+    res.status(status.NOT_FOUND).json({
+      message: "Page not found",
+    });
   }
 });
 

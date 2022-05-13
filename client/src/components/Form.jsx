@@ -1,7 +1,7 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import styles from "../styles/Form.module.css";
-import { useDispatch } from "react-redux";
-import { createPokemon } from "../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { createPokemon, pushInTypes, clearTypes } from "../redux/actions";
 import NavBar from "./NavBar";
 
 function validateForm(data) {
@@ -97,6 +97,7 @@ function validateForm(data) {
 
 export default function Form() {
   const dispatch = useDispatch();
+  const { types } = useSelector((state) => state);
   const [error, setError] = useState({});
   const [form, setForm] = useState({
     name: "",
@@ -106,6 +107,14 @@ export default function Form() {
     height: "",
     weight: "",
   });
+
+  useEffect(() => {
+    if (types.length === 0) {
+      (async () => {
+        await fetch("http://localhost:3001/types");
+      })();
+    }
+  }, [dispatch, types]);
 
   const handleChange = (e) => {
     setForm({
@@ -132,7 +141,8 @@ export default function Form() {
 
     if (Object.keys(error).length === 0) {
       try {
-        dispatch(createPokemon(form));
+        dispatch(createPokemon({ ...form, types }));
+        dispatch(clearTypes());
       } catch (e) {
         alert(e);
       } finally {
@@ -149,6 +159,11 @@ export default function Form() {
     } else {
       alert("Por favor, llena todos los campos");
     }
+  };
+
+  const handleOption = (e) => {
+    e.preventDefault();
+    dispatch(pushInTypes(e.target.value));
   };
 
   return (
@@ -257,6 +272,41 @@ export default function Form() {
           </div>
           {error.weight && <p className={styles.danger}>{error.weight}</p>}
         </div>
+        <div>
+          <div className={styles.field}>
+            <label htmlFor="weight">Type: </label>
+            <select name="" id="" onChange={handleOption}>
+              <option value="normal">Normal</option>
+              <option value="fire">Fire</option>
+              <option value="water">Water</option>
+              <option value="electric">Electric</option>
+              <option value="grass">Grass</option>
+              <option value="ice">Ice</option>
+              <option value="fighting">Fighting</option>
+              <option value="poison">Poison</option>
+              <option value="ground">Ground</option>
+              <option value="flying">Flying</option>
+              <option value="psychic">Psychic</option>
+              <option value="bug">Bug</option>
+              <option value="rock">Rock</option>
+              <option value="ghost">Ghost</option>
+              <option value="dragon">Dragon</option>
+              <option value="dark">Dark</option>
+              <option value="steel">Steel</option>
+              <option value="fairy">Fairy</option>
+              <option value="unknown">Unknown</option>
+              <option value="shadow">Shadow</option>
+            </select>
+          </div>
+          {error.weight && <p className={styles.danger}>{error.weight}</p>}
+        </div>
+        {types.length ? (
+          <ul className={styles.listTypes}>
+            {types.map((type) => {
+              return <li key={type}>{type}</li>;
+            })}
+          </ul>
+        ) : null}
         <button>create pokemon</button>
       </form>
     </Fragment>

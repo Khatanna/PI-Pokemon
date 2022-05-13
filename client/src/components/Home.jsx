@@ -1,7 +1,12 @@
 import React, { Fragment, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getPokemonList, filterPokemonByName } from "../redux/actions";
+import {
+  getPokemonList,
+  filterPokemon,
+  clearPokemon,
+  pushInRecentSearch,
+} from "../redux/actions";
 
 import PokemonList from "./PokemonList";
 import Pokemon from "./Pokemon";
@@ -11,17 +16,19 @@ import Filter from "./Filter";
 export default function Home() {
   const dispatch = useDispatch();
   const { page, order, pokemon } = useSelector((state) => state);
-  const length = Object.keys(pokemon).length;
   useEffect(() => {
-    if (length !== 0) {
-      return;
-    }
     if (!order) {
-      return dispatch(getPokemonList(page));
+      dispatch(getPokemonList(page));
     } else {
-      return dispatch(filterPokemonByName(page, order));
+      dispatch(filterPokemon(page, order));
     }
-  }, [page, order, length]);
+  }, [dispatch, order, page]);
+
+  const handleReturn = () => {
+    dispatch(pushInRecentSearch(pokemon));
+    dispatch(getPokemonList(page));
+    dispatch(clearPokemon());
+  };
 
   return (
     <Fragment>
@@ -29,12 +36,10 @@ export default function Home() {
       <div className={styles.App}>
         <Filter />
         <hr />
-        {length ? (
+        {Object.keys(pokemon).length ? (
           <Fragment>
             <div className={styles["btn-volver"]}>
-              <button onClick={() => dispatch(getPokemonList(page))}>
-                Volver
-              </button>
+              <button onClick={handleReturn}>Volver</button>
             </div>
             <div className={styles.pokemon}>
               <Pokemon pokemon={pokemon} />

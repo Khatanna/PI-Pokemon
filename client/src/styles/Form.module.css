@@ -49,3 +49,15 @@ p.danger {
 input.danger {
   border: 2px solid red;
 }
+
+.listTypes{
+  display: flex;
+  width: 300px;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.listTypes > li {
+  list-style-position: inside;
+}

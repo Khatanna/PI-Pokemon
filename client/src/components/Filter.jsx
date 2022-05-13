@@ -2,18 +2,25 @@ import React, { Fragment } from "react";
 import styles from "../styles/Filter.module.css";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setOrder } from "../redux/actions";
+import { setOrder, clearPokemonList, setPage } from "../redux/actions";
 
 export default function Filter() {
   const dispatch = useDispatch();
   const { order } = useSelector((state) => state);
   const handleOption = (e) => {
     e.preventDefault();
-    if (e.target.value === "default" || e.target.value === order) {
+    if (e.target.value === order) {
       return;
     }
-    dispatch(setOrder(e.target.value));
+    if (e.target.value === "default") {
+      dispatch(setOrder(null));
+    } else {
+      dispatch(setPage(1));
+      dispatch(setOrder(e.target.value));
+    }
+    dispatch(clearPokemonList());
   };
+
   return (
     <Fragment>
       <div className={styles["filter-container"]}>

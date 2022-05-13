@@ -1,33 +1,37 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import styles from "../styles/SearchBar.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { getPokemonByName, pushInRecentSearch } from "../redux/actions";
+import { useDispatch } from "react-redux";
+import {
+  getPokemonByName,
+  clearPokemonList,
+  clearPokemon,
+} from "../redux/actions";
 
 export default function SearchBar() {
   const [search, setSearch] = useState("");
-  const { pokemon } = useSelector((state) => state);
   const dispatch = useDispatch();
-  const handleSubmit = (e) => {
+
+  const getPokemon = (e) => {
     e.preventDefault();
+    if (search.length === 0) {
+      return;
+    }
+    dispatch(clearPokemon());
     dispatch(getPokemonByName(search));
+    dispatch(clearPokemonList());
     setSearch("");
   };
-  useEffect(() => {
-    if (Object.keys(pokemon).length > 0) {
-      dispatch(pushInRecentSearch(pokemon));
-    }
-  }, [pokemon]);
 
   return (
     <Fragment>
-      <form className={styles.searchBar} action="" onSubmit={handleSubmit}>
+      <form className={styles.searchBar} action="" onSubmit={getPokemon}>
         <input
           type="text"
           className={styles.input}
           onChange={(e) => setSearch(e.target.value)}
           value={search}
         />
-        <button className={styles.button}>Buscar</button>
+        <button className={styles.button}>Search</button>
       </form>
     </Fragment>
   );

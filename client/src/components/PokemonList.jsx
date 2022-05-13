@@ -4,12 +4,25 @@ import ScreenLoading from "./ScreenLoading";
 import styles from "../styles/PokemonList.module.css";
 import Pokemon from "./Pokemon";
 import RecentSearch from "./RecentSearch";
+import Creates from "./Creates";
 import { useSelector } from "react-redux";
 
 export default function PokemonList() {
-  const { pokemonList } = useSelector((state) => state);
+  const { pokemonList, creates } = useSelector((state) => state);
+  if (typeof pokemonList[0] === "string") {
+    return (
+      <Fragment>
+        <h1 className={styles.creates}>{pokemonList[0]}</h1>
+      </Fragment>
+    );
+  }
   return (
     <Fragment>
+      {creates.length ? (
+        <Fragment>
+          <Creates />
+        </Fragment>
+      ) : null}
       {pokemonList.length !== 0 ? (
         <Fragment>
           <RecentSearch />

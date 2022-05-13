@@ -6,6 +6,7 @@ export const getPokemonByName = (name) => {
   return async (dispatch) => {
     const response = await fetch(`${URL}/pokemons?name=${name}`);
     const data = await response.json();
+    console.log(data);
     dispatch({
       type: types.GET_POKEMON_BY_NAME,
       payload: data,
@@ -61,10 +62,12 @@ export const createPokemon = (pokemon) => {
       },
       body: JSON.stringify(pokemon),
     });
-    const data = await response.json();
+    const { name } = await response.json();
+    const data = await fetch(`${URL}/pokemons?name=${name}`);
+    const dataJson = await data.json();
     dispatch({
       type: types.CREATE_POKEMON,
-      payload: data,
+      payload: dataJson,
     });
   };
 };
@@ -83,7 +86,7 @@ export const setOrder = (order) => {
   };
 };
 
-export const filterPokemonByName = (page = 1, typeOfFilter) => {
+export const filterPokemon = (page = 1, typeOfFilter) => {
   const results = [];
   if (typeOfFilter.includes("name")) {
     const [filter, order] = typeOfFilter.split("_");
@@ -97,7 +100,7 @@ export const filterPokemonByName = (page = 1, typeOfFilter) => {
         results.push(await pokemon.json());
       }
       dispatch({
-        type: types.FILTER_POKEMON_BY_NAME,
+        type: types.FILTER_POKEMON,
         payload: results,
       });
     };
@@ -105,26 +108,59 @@ export const filterPokemonByName = (page = 1, typeOfFilter) => {
   if (typeOfFilter.includes("attack")) {
     const [, order] = typeOfFilter.split("_");
     return async (dispatch) => {
-      const response = await fetch(`${URL}/pokemons?page=${page}&limit=12`);
+      const response = await fetch(`${URL}/pokemons?page=1&limit=40`);
       const data = await response.json();
+      console.log(data);
       for (let i = 0; i < data.results.length; i++) {
         const pokemon = await fetch(data.results[i].url);
         results.push(await pokemon.json());
       }
-      if (order === "asc") {
-        results.sort((a, b) => a.stats[1].base_stat - b.stats[1].base_stat);
-      } else {
-        results.sort((a, b) => b.stats[1].base_stat - a.stats[1].base_stat);
+      if (order === "ascendent") {
+        results.sort(
+          (a, b) =>
+            a.stats.find(({ stat }) => stat.name === "attack").base_stat -
+            b.stats.find(({ stat }) => stat.name === "attack").base_stat
+        );
+      }
+      if (order === "descendent") {
+        results.sort(
+          (a, b) =>
+            b.stats.find(({ stat }) => stat.name === "attack").base_stat -
+            a.stats.find(({ stat }) => stat.name === "attack").base_stat
+        );
       }
       dispatch({
-        type: types.FILTER_POKEMON_BY_NAME,
-        payload: results,
+        type: types.FILTER_POKEMON,
+        payload: results.slice((page - 1) * 12, 12 * page),
       });
+    };
+  }
+  if (typeOfFilter.includes("created")) {
+    return async (dispatch) => {
+      const response = await fetch(`${URL}/pokemons?page=${page}&limit=12`);
+      const data = await response.json();
+
+      for (let i = 0; i < data.results.length; i++) {
+        const pokemon = await fetch(data.results[i].url);
+        results.push(await pokemon.json());
+      }
+      const creates = results.filter(({ id }) => isNaN(id));
+      if (creates.length) {
+        dispatch({
+          type: types.FILTER_POKEMON,
+          payload: creates,
+        });
+      } else {
+        dispatch({
+          type: types.FILTER_POKEMON,
+          payload: ["no new pokemon yet 😢"],
+        });
+      }
     };
   }
   return async (dispatch) => {
     dispatch({
-      type: types.FILTER_POKEMON_BY_NAME,
+      type: types.FILTER_POKEMON,
       payload: results,
     });
   };
@@ -134,5 +170,42 @@ export function pushInRecentSearch(pokemon) {
   return {
     type: types.PUSH_IN_RECENT_SEARCH,
     payload: pokemon,
+  };
+}
+
+export function pushInTypes(type) {
+  return {
+    type: types.PUSH_IN_TYPES,
+    payload: type,
+  };
+}
+
+export function clearPokemon() {
+  return {
+    type: types.CLEAR_POKEMON,
+  };
+}
+
+export function clearPokemonList() {
+  return {
+    type: types.CLEAR_POKEMON_LIST,
+  };
+}
+
+export function clearTypes() {
+  return {
+    type: types.CLEAR_TYPES,
+  };
+}
+
+export function getCount() {
+  return async (dispatch) => {
+    const response = await fetch(`${URL}/pokemons?page=${1}&limit=12`);
+    const { count } = await response.json();
+
+    dispatch({
+      type: types.GET_COUNT,
+      payload: count,
+    });
   };
 }

@@ -1,39 +1,44 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPage } from "../redux/actions";
+import { setPage, clearPokemonList, getCount } from "../redux/actions";
 import styles from "../styles/Paginator.module.css";
 
 export default function Paginator() {
   const dispatch = useDispatch();
   const [input, setInput] = useState("");
-  const page = useSelector((state) => state.page);
+  const { page, count, pokemonList } = useSelector((state) => state);
+
+  useEffect(() => {
+    dispatch(getCount());
+    if (
+      input < 1 ||
+      input >
+        Math.ceil(
+          count - (40 + pokemonList.length) < 0 ? count / 12 : (count - 40) / 12
+        )
+    ) {
+      setInput("");
+    }
+  }, [dispatch, input, count, pokemonList]);
 
   const handlePage = (e) => {
     const options = {
       next: () => dispatch(setPage(page + 1)),
       previous: () => dispatch(setPage(page - 1)),
+      clear: () => dispatch(clearPokemonList()),
     };
     options[e.target.id]();
-  };
-  const goPage = () => {
-    if (input === "") {
-      dispatch(setPage(1));
-    } else if (+input > Math.ceil(40 / 12)) {
-      alert("Page does not exist");
-    } else {
-      dispatch(setPage(+input));
-    }
-    setInput("");
+    options.clear();
   };
 
-  useEffect(() => {
-    if (input < 1) {
+  const goToPage = () => {
+    if (+input === page) {
       setInput("");
+    } else {
+      dispatch(setPage(+input));
+      dispatch(clearPokemonList());
     }
-    if (input > Math.ceil(40 / 12)) {
-      setInput(Math.ceil(40 / 12));
-    }
-  }, [input]);
+  };
 
   return (
     <Fragment>
@@ -47,7 +52,12 @@ export default function Paginator() {
             <button disabled>Previous</button>
           )}
           <b>{page}</b>
-          {page < Math.ceil(40 / 12) ? (
+          {page <
+          Math.ceil(
+            count - (40 + pokemonList.length) < 0
+              ? count / 12
+              : (count - 40) / 12
+          ) ? (
             <button onClick={handlePage} id="next">
               Next
             </button>
@@ -59,7 +69,11 @@ export default function Paginator() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-          <button onClick={goPage}>Ir</button>
+          {input !== "" ? (
+            <button onClick={goToPage}>Go</button>
+          ) : (
+            <button disabled>Go</button>
+          )}
         </div>
       </div>
     </Fragment>
