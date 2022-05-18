@@ -22,7 +22,9 @@ export default function PokemonList() {
       ) : !error ? (
         <ScreenLoading />
       ) : (
-        <h1 className={styles.creates}>{error}</h1>
+        <div className={styles.creates}>
+          <h1>{error}</h1>
+        </div>
       )}
     </Fragment>
   );

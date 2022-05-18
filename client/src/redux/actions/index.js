@@ -1,4 +1,5 @@
 import * as types from "../constants/ActionTypes.js";
+import { orderByName, orderByAttack, filterByCreated } from "./filters.js";
 
 const URL = "http://localhost:3001";
 
@@ -114,44 +115,42 @@ export const setOrder = (order) => {
 
 export const filterPokemon = (page = 1, typeOfFilter) => {
   const results = [];
+  const responses = {
+    name: (order) =>
+      orderByName(
+        page,
+        `${URL}/pokemons?page=1&limit=40&filter=name&order=${order}`,
+        results
+      ),
+    attack: (order) =>
+      orderByAttack(page, `${URL}/pokemons?page=1&limit=40`, results, order),
+    created: () =>
+      filterByCreated(page, `${URL}/pokemons?page=1&limit=40`, results),
+  };
   if (typeOfFilter.includes("name")) {
-    const [filter, order] = typeOfFilter.split("_");
-    return async (dispatch) => {
-      const response = await fetch(
-        `${URL}/pokemons?page=1&limit=40&filter=${filter}&order=${order}`
-      );
-      const data = await response.json();
-      for (let i = 0; i < data.results.length; i++) {
-        const response = await fetch(data.results[i].url);
-        const { id, name, types, stats, sprites, height, weight } =
-          await response.json();
-        results.push({
-          id,
-          name,
-          types: types.map(({ type }) => type.name),
-          stats,
-          height,
-          weight,
-          sprite: sprites?.other?.dream_world?.front_default || null,
-        });
-      }
-      dispatch({
-        type: types.FILTER_POKEMON,
-        payload: results.slice((page - 1) * 12, 12 * page),
-      });
-    };
+    const [, order] = typeOfFilter.split("_");
+    return responses.name(order);
   }
   if (typeOfFilter.includes("attack")) {
     const [, order] = typeOfFilter.split("_");
-    return async (dispatch) => {
-      const response = await fetch(`${URL}/pokemons?page=1&limit=40`);
-      const data = await response.json();
-      console.log(data);
-      for (let i = 0; i < data.results.length; i++) {
-        const response = await fetch(data.results[i].url);
-        const { id, name, types, stats, sprites, height, weight } =
-          await response.json();
-        results.push({
+    return responses.attack(order);
+  }
+  if (typeOfFilter.includes("created")) {
+    return responses.created();
+  }
+};
+
+export const filterPokemonByTypes = (page, ArrayOfTypes) => {
+  const pokemons = [];
+  return async (dispatch) => {
+    const response = await fetch(`${URL}/pokemons?page=1&limit=40`);
+    const { results } = await response.json();
+    for (let data of results) {
+      const response = await fetch(data.url);
+      const { id, name, types, stats, sprites, height, weight } =
+        await response.json();
+      if (types.some(({ type }) => ArrayOfTypes.includes(type.name))) {
+        pokemons.push({
           id,
           name,
           types: types.map(({ type }) => type.name),
@@ -161,100 +160,39 @@ export const filterPokemon = (page = 1, typeOfFilter) => {
           sprite: sprites?.other?.dream_world?.front_default || null,
         });
       }
-      if (order === "ascendent") {
-        results.sort(
-          (a, b) =>
-            a.stats.find(({ stat }) => stat.name === "attack").base_stat -
-            b.stats.find(({ stat }) => stat.name === "attack").base_stat
-        );
-      }
-      if (order === "descendent") {
-        results.sort(
-          (a, b) =>
-            b.stats.find(({ stat }) => stat.name === "attack").base_stat -
-            a.stats.find(({ stat }) => stat.name === "attack").base_stat
-        );
-      }
-      dispatch({
-        type: types.FILTER_POKEMON,
-        payload: results.slice((page - 1) * 12, 12 * page),
-      });
-    };
-  }
-  if (typeOfFilter.includes("created")) {
-    return async (dispatch) => {
-      try {
-        const response = await fetch(`${URL}/pokemons?page=1&limit=40`);
-        const data = await response.json();
-
-        for (let i = 0; i < data.results.length; i++) {
-          const response = await fetch(data.results[i].url);
-          const { id, name, types, stats, sprites, height, weight } =
-            await response.json();
-          results.push({
-            id,
-            name,
-            types: types.map(({ type }) => type.name),
-            stats,
-            height,
-            weight,
-            sprite: sprites?.other?.dream_world?.front_default || null,
-          });
-        }
-        const creates = results.filter(({ id }) => isNaN(id));
-        if (creates.length > 0) {
-          dispatch({
-            type: types.FILTER_POKEMON,
-            payload: creates.slice((page - 1) * 12, 12 * page),
-          });
-        } else {
-          dispatch({
-            type: types.FILTER_POKEMON_ERROR,
-            payload: "Pokemon not found 😪",
-          });
-        }
-      } catch (error) {
-        console.log(error);
-        dispatch({
-          type: types.FILTER_POKEMON_ERROR,
-          payload: "Pokemon not found 😪",
-        });
-      }
-    };
-  }
-  return async (dispatch) => {
+    }
     dispatch({
-      type: types.FILTER_POKEMON,
-      payload: results,
+      type: types.FILTER_BY_TYPES,
+      payload: pokemons.slice((page - 1) * 12, 12 * page),
     });
   };
 };
 
-export function clearPokemonSearch() {
+export const clearPokemonSearch = () => {
   return {
     type: types.CLEAR_POKEMON_SEARCH,
   };
-}
+};
 
-export function clearPokemonDetail() {
+export const clearPokemonDetail = () => {
   return {
     type: types.CLEAR_POKEMON_DETAIL,
   };
-}
+};
 
-export function clearPokemonList() {
+export const clearPokemonList = () => {
   return {
     type: types.CLEAR_POKEMON_LIST,
   };
-}
+};
 
-export function clearPokemonCreate() {
+export const clearPokemonCreate = () => {
   return {
     type: types.CLEAR_POKEMON_CREATE,
   };
-}
+};
 
-export function getTypes(){
+export const getTypes = () => {
   return async (dispatch) => {
     const response = await fetch(`${URL}/types`);
     const data = await response.json();
@@ -263,11 +201,11 @@ export function getTypes(){
       payload: data,
     });
   };
-}
+};
 
-export function getCount() {
+export const getCount = () => {
   return async (dispatch) => {
-    const response = await fetch(`${URL}/pokemons?page=${1}&limit=12`);
+    const response = await fetch(`${URL}/pokemons?page=1&limit=12`);
     const { count } = await response.json();
 
     dispatch({
@@ -275,10 +213,24 @@ export function getCount() {
       payload: count,
     });
   };
-}
+};
 
-export function clearError() {
+export const clearError = () => {
   return {
     type: types.CLEAR_ERROR,
   };
-}
+};
+
+export const pushInFilterTypes = (type) => {
+  return {
+    type: types.PUSH_IN_FILTER_TYPES,
+    payload: type,
+  };
+};
+
+export const removeFromFilterTypes = (type) => {
+  return {
+    type: types.REMOVE_FROM_FILTER_TYPES,
+    payload: type,
+  };
+};

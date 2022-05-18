@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import styles from "../styles/Filter.module.css";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,19 +7,26 @@ import {
   clearPokemonList,
   setPage,
   clearError,
+  getTypes,
+  pushInFilterTypes,
+  removeFromFilterTypes,
 } from "../redux/actions";
 
 export default function Filter() {
   const dispatch = useDispatch();
-  const { order } = useSelector((state) => state);
+  const [list, setList] = useState(false);
+  const { types, filterTypes } = useSelector((state) => state);
 
   const handleOption = (e) => {
     e.preventDefault();
-    if (e.target.value === order) {
-      return;
-    }
     if (e.target.value === "default") {
       dispatch(setOrder(null));
+    } else if (e.target.value === "types") {
+      dispatch(getTypes());
+
+      setList(!list);
+      e.target.selectedIndex = 0;
+      return;
     } else {
       dispatch(setPage(1));
       dispatch(setOrder(e.target.value));
@@ -28,22 +35,65 @@ export default function Filter() {
     dispatch(clearError());
   };
 
+  const handleChange = (e, name) => {
+    if (e.target.checked) {
+      dispatch(pushInFilterTypes(name));
+      dispatch(setOrder("types"));
+    } else {
+      console.log(filterTypes.length);
+      dispatch(removeFromFilterTypes(name));
+      if (filterTypes.length === 1) {
+        dispatch(setOrder(null));
+      }
+    }
+    dispatch(clearPokemonList());
+  };
+
   return (
     <Fragment>
       <div className={styles["filter-container"]}>
         <Link to="/create" className={styles.link}>
           Create pokemon
         </Link>
-        <select name="" id="" className={styles.filter} onChange={handleOption}>
-          <option value="default">Filters...</option>
-          <option value="name_asc">Filter of name [A-Z]</option>
-          <option value="name_desc">Filter of name [Z-A]</option>
-          <option value="attack_ascendent">Filter of attack ascendent</option>
-          <option value="attack_descendent">Filter of attack descendent</option>
-          <option value="created">Created by you</option>
-          <option value="type">For types</option>
-        </select>
+        <div className={styles.selects}>
+          <select
+            name=""
+            id=""
+            className={styles.filter}
+            onChange={handleOption}
+          >
+            <option disabled>Filter by</option>
+            <option value="default">Default</option>
+            <option value="created">Created by you</option>
+            <option value="types">By types</option>
+          </select>
+          <select
+            name=""
+            id=""
+            className={styles.filter}
+            onChange={handleOption}
+          >
+            <option disabled>Order by</option>
+            <option value="default">Default</option>
+            <option value="name_asc">Order by name ascendent</option>
+            <option value="name_desc">Order by name descendent</option>
+            <option value="attack_ascendent">Order by attack ascendent</option>
+            <option value="attack_descendent">
+              Order by attack descendent
+            </option>
+          </select>
+        </div>
       </div>
+      {list && (
+        <div className={styles["container-types"]}>
+          {types?.map(({ name }) => (
+            <div className={styles.types} key={name}>
+              <label htmlFor={name}>{name}</label>
+              <input type="checkbox" onChange={(e) => handleChange(e, name)} />
+            </div>
+          ))}
+        </div>
+      )}
     </Fragment>
   );
 }

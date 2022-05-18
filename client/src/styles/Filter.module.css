@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   border-radius: 3px;
-  margin: 20px 80px;
+  margin: 20px 70px;
   padding: 10px;
 }
 
@@ -23,4 +23,27 @@
 .link:hover{
   background-color: rgb(128, 128, 128, 0.151);
   box-shadow: 0px 0px 10px 0px rgba(128, 128, 128, 0.151);
+}
+
+.selects{
+  display: flex;
+  gap: 5px;
+}
+.container-types{
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  gap: 5px;
+  font-size: 1.1em;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.types{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(119, 119, 119, 0.774)
 }

@@ -8,7 +8,8 @@ export default function Paginator() {
   const [input, setInput] = useState("");
   const { page, count, pokemonList } = useSelector((state) => state);
   const limit = Math.ceil(
-    count - (count + pokemonList.length) < 0 ? count / 12 : (count - count) / 12
+    //count - (40 + pokemonList.length) < 0 ? count / 12 : (count - 40) / 12
+    pokemonList.length < 12 ? 1 : count / 12
   );
 
   useEffect(() => {

@@ -35,6 +35,14 @@
   margin: 0 0 7px 0;
 }
 
+.creates{
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+}
+
 hr{
   width: 100%;
   margin-bottom: 20px;

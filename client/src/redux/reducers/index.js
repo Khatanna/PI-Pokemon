@@ -6,6 +6,7 @@ const initialState = {
   pokemonDetail: {},
   pokemonCreated: {},
   types: [],
+  filterTypes: [],
   page: 1,
   count: 0,
   order: null,
@@ -64,6 +65,11 @@ export default function reducer(state = initialState, { type, payload }) {
         ...state,
         error: payload,
       };
+    case types.FILTER_BY_TYPES:
+      return {
+        ...state,
+        pokemonList: payload,
+      };
     case types.SET_ORDER:
       return {
         ...state,
@@ -103,6 +109,16 @@ export default function reducer(state = initialState, { type, payload }) {
       return {
         ...state,
         types: payload,
+      };
+    case types.PUSH_IN_FILTER_TYPES:
+      return {
+        ...state,
+        filterTypes: [...state.filterTypes, payload],
+      };
+    case types.REMOVE_FROM_FILTER_TYPES:
+      return {
+        ...state,
+        filterTypes: state.filterTypes.filter((type) => type !== payload),
       };
     default:
       return state;
