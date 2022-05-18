@@ -3,7 +3,7 @@ const { Type } = require("../db");
 const router = Router();
 const axios = require("axios");
 const url = "https://pokeapi.co/api/v2";
-const status = require("./status");
+const status = require("./constants/status.js");
 
 router.get("/", async (req, res) => {
   try {

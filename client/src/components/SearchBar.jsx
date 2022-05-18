@@ -1,34 +1,28 @@
 import React, { Fragment, useState } from "react";
 import styles from "../styles/SearchBar.module.css";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {
-  getPokemonByName,
-  clearPokemonList,
-  clearPokemon,
-} from "../redux/actions";
+import { clearError } from "../redux/actions";
 
 export default function SearchBar() {
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const getPokemon = (e) => {
-    e.preventDefault();
-    if (search.length === 0) {
-      return;
-    }
-    dispatch(clearPokemon());
-    dispatch(getPokemonByName(search));
-    dispatch(clearPokemonList());
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    navigate(`/search/${search}`);
+    dispatch(clearError());
     setSearch("");
   };
 
   return (
     <Fragment>
-      <form className={styles.searchBar} action="" onSubmit={getPokemon}>
+      <form className={styles.searchBar} onSubmit={handleSubmit}>
         <input
           type="text"
           className={styles.input}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value.trim())}
           value={search}
         />
         <button className={styles.button}>Search</button>

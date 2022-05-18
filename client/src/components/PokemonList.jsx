@@ -3,38 +3,26 @@ import Paginator from "./Paginator";
 import ScreenLoading from "./ScreenLoading";
 import styles from "../styles/PokemonList.module.css";
 import Pokemon from "./Pokemon";
-import RecentSearch from "./RecentSearch";
-import Creates from "./Creates";
 import { useSelector } from "react-redux";
-
 export default function PokemonList() {
-  const { pokemonList, creates } = useSelector((state) => state);
-  if (typeof pokemonList[0] === "string") {
-    return (
-      <Fragment>
-        <h1 className={styles.creates}>{pokemonList[0]}</h1>
-      </Fragment>
-    );
-  }
+  const { pokemonList, error } = useSelector((state) => state);
+
   return (
     <Fragment>
-      {creates.length ? (
-        <Fragment>
-          <Creates />
-        </Fragment>
-      ) : null}
       {pokemonList.length !== 0 ? (
         <Fragment>
-          <RecentSearch />
           <div className={styles.pokemons}>
+            <hr />
             {pokemonList.map((pokemon) => (
               <Pokemon pokemon={pokemon} key={pokemon.id} />
             ))}
           </div>
           <Paginator />
         </Fragment>
-      ) : (
+      ) : !error ? (
         <ScreenLoading />
+      ) : (
+        <h1 className={styles.creates}>{error}</h1>
       )}
     </Fragment>
   );

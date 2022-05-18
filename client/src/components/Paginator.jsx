@@ -7,19 +7,16 @@ export default function Paginator() {
   const dispatch = useDispatch();
   const [input, setInput] = useState("");
   const { page, count, pokemonList } = useSelector((state) => state);
+  const limit = Math.ceil(
+    count - (count + pokemonList.length) < 0 ? count / 12 : (count - count) / 12
+  );
 
   useEffect(() => {
     dispatch(getCount());
-    if (
-      input < 1 ||
-      input >
-        Math.ceil(
-          count - (40 + pokemonList.length) < 0 ? count / 12 : (count - 40) / 12
-        )
-    ) {
+    if (input < 1 || input > limit) {
       setInput("");
     }
-  }, [dispatch, input, count, pokemonList]);
+  }, [dispatch, input, limit]);
 
   const handlePage = (e) => {
     const options = {
@@ -42,39 +39,32 @@ export default function Paginator() {
 
   return (
     <Fragment>
-      <div>
-        <div className={styles.pagination}>
-          {page > 1 ? (
-            <button onClick={handlePage} id="previous">
-              Previous
-            </button>
-          ) : (
-            <button disabled>Previous</button>
-          )}
-          <b>{page}</b>
-          {page <
-          Math.ceil(
-            count - (40 + pokemonList.length) < 0
-              ? count / 12
-              : (count - 40) / 12
-          ) ? (
-            <button onClick={handlePage} id="next">
-              Next
-            </button>
-          ) : (
-            <button disabled>Next</button>
-          )}
-          <input
-            type="number"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          {input !== "" ? (
-            <button onClick={goToPage}>Go</button>
-          ) : (
-            <button disabled>Go</button>
-          )}
-        </div>
+      <div className={styles.pagination}>
+        {page > 1 ? (
+          <button onClick={handlePage} id="previous">
+            Previous
+          </button>
+        ) : (
+          <button disabled>Previous</button>
+        )}
+        <b>{page}</b>
+        {page < limit ? (
+          <button onClick={handlePage} id="next">
+            Next
+          </button>
+        ) : (
+          <button disabled>Next</button>
+        )}
+        <input
+          type="number"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        {input !== "" ? (
+          <button onClick={goToPage}>Go</button>
+        ) : (
+          <button disabled>Go</button>
+        )}
       </div>
     </Fragment>
   );

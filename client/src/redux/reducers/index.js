@@ -2,13 +2,14 @@ import * as types from "../constants/ActionTypes.js";
 
 const initialState = {
   pokemonList: [],
-  recentSearch: [],
-  creates: [],
+  pokemonSearch: {},
+  pokemonDetail: {},
+  pokemonCreated: {},
   types: [],
-  pokemon: {},
   page: 1,
-  order: null,
   count: 0,
+  order: null,
+  error: null,
 };
 
 export default function reducer(state = initialState, { type, payload }) {
@@ -18,25 +19,35 @@ export default function reducer(state = initialState, { type, payload }) {
         ...state,
         pokemonList: payload,
       };
-    case types.GET_TYPES:
+    case types.GET_POKEMON_LIST_ERROR:
       return {
         ...state,
-        pokemon: payload,
+        error: payload,
       };
     case types.CREATE_POKEMON:
       return {
         ...state,
-        creates: [...state.creates, payload],
+        pokemonCreated: payload,
+      };
+    case types.CREATE_POKEMON_ERROR:
+      return {
+        ...state,
+        error: payload,
       };
     case types.GET_POKEMON_BY_NAME:
       return {
         ...state,
-        pokemon: payload,
+        pokemonSearch: payload,
+      };
+    case types.GET_POKEMON_BY_NAME_ERROR:
+      return {
+        ...state,
+        error: payload,
       };
     case types.GET_POKEMON_BY_ID:
       return {
         ...state,
-        pokemon: payload,
+        pokemonDetail: payload,
       };
     case types.SET_PAGE:
       return {
@@ -48,45 +59,50 @@ export default function reducer(state = initialState, { type, payload }) {
         ...state,
         pokemonList: payload,
       };
+    case types.FILTER_POKEMON_ERROR:
+      return {
+        ...state,
+        error: payload,
+      };
     case types.SET_ORDER:
       return {
         ...state,
         order: payload,
       };
-    case types.PUSH_IN_RECENT_SEARCH:
-      if (state.pokemon.message !== "Pokemon not found") {
-        return {
-          ...state,
-          recentSearch: [...state.recentSearch, payload],
-        };
-      }
+    case types.CLEAR_POKEMON_SEARCH:
       return {
         ...state,
+        pokemonSearch: {},
       };
-    case types.PUSH_IN_TYPES:
+    case types.CLEAR_POKEMON_DETAIL:
       return {
         ...state,
-        types: Array.from(new Set([...state.types, payload])),
-      };
-    case types.CLEAR_POKEMON:
-      return {
-        ...state,
-        pokemon: {},
+        pokemonDetail: {},
       };
     case types.CLEAR_POKEMON_LIST:
       return {
         ...state,
         pokemonList: [],
       };
-    case types.CLEAR_TYPES:
+    case types.CLEAR_POKEMON_CREATE:
       return {
         ...state,
-        types: [],
+        pokemonCreated: {},
       };
     case types.GET_COUNT:
       return {
         ...state,
         count: payload,
+      };
+    case types.CLEAR_ERROR:
+      return {
+        ...state,
+        error: null,
+      };
+    case types.GET_TYPES:
+      return {
+        ...state,
+        types: payload,
       };
     default:
       return state;

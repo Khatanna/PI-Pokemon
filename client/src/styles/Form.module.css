@@ -8,7 +8,7 @@
   gap: 5px
 }
 .field{
-  width: 300px;
+  width: 320px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -38,6 +38,10 @@ button {
   cursor: pointer;
 }
 
+.btn-create{
+  margin: 20px;
+}
+
 p.danger {
   padding: 0 5px;
   color: red;
@@ -59,5 +63,249 @@ input.danger {
 }
 
 .listTypes > li {
-  list-style-position: inside;
+  list-style: none;
+  padding: 3px 10px;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.loading {
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner{
+  border: 3px solid rgba(0, 0, 0, .1);
+  width: 10px ;
+  height: 10px ;
+  border-radius: 50%;
+  border-left-color: #09f;
+  animation: spin 1s ease infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+  
+}
+
+.normal {
+  border: 1px solid gray;
+}
+
+.normal:hover {
+  background-color: rgb(128, 128, 128, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(128, 128, 128, 0.151);
+  border: 1px solid 128, 128, 128, 0.151;
+}
+
+.fighting {
+  border: 1px solid rgb(72, 5, 17);
+}
+
+.fighting:hover {
+  background-color: rgb(72, 5, 17, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(72, 5, 17, 0.151);
+  border: 1px solid 72, 5, 17, 0.151;
+}
+
+.flying {
+  border: 1px solid rgb(0, 0, 255);
+}
+
+.flying:hover {
+  background-color: rgb(0, 0, 255, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 255, 0.151);
+  border: 1px solid 0, 0, 255, 0.151;
+}
+
+.poison {
+  border: 1px solid rgb(144, 65, 144);
+}
+
+.poison:hover {
+  background-color: rgb(144, 65, 144, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(144, 65, 144, 0.151);
+  border: 1px solid 144, 65, 144, 0.151;
+}
+
+.ground {
+  border: 1px solid brown;
+}
+
+.ground:hover {
+  background-color: rgb(139, 69, 19, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(139, 69, 19, 0.151);
+  border: 1px solid 139, 69, 19, 0.151;
+}
+
+.rock {
+  border: 1px solid rgb(102, 102, 102);
+}
+
+.rock:hover {
+  background-color: rgb(102, 102, 102, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(102, 102, 102, 0.151);
+  border: 1px solid 102, 102, 102, 0.151;
+}
+
+.bug {
+  border: 1px solid rgb(40, 180, 40);
+}
+
+.bug:hover {
+  background-color: rgb(40, 180, 40, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(40, 180, 40, 0.151);
+  border: 1px solid 40, 180, 40, 0.151;
+}
+
+.ghost {
+  border: 1px solid rgb(153, 153, 153);
+}
+
+.ghost:hover {
+  background-color: rgb(153, 153, 153, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(153, 153, 153, 0.151);
+  border: 1px solid 153, 153, 153, 0.151;
+}
+
+.steel {
+  border: 1px solid rgb(102, 102, 102);
+}
+
+.steel:hover {
+  background-color: rgb(102, 102, 102, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(102, 102, 102, 0.151);
+  border: 1px solid 102, 102, 102, 0.151;
+}
+
+.fire {
+  border: 1px solid orange;
+}
+
+.fire:hover {
+  background-color: rgb(255, 165, 0, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(255, 165, 0, 0.151);
+  border: 1px solid 255, 165, 0, 0.151;
+}
+
+.water {
+  border: 1px solid rgb(0, 187, 255);
+}
+
+.water:hover {
+  background-color: rgb(0, 187, 255, 0.151);
+  box-shadow: 0px 0px 10px 0px rgba(0, 187, 255, 0.151);
+  border: 1px solid 0, 187, 255, 0.151;
+}
+
+.grass {
+  border: 1px solid rgb(221, 61, 61);
+  
+}
+
+.grass:hover {
+  background-color: rgba(221, 61, 61, 0.151);
+  box-shadow:
+    0px 0px 0px 1px rgba(221, 61, 61, 0.151),
+  ;
+  border: 1px solid rgb(221, 61, 61, 0.151);
+}
+
+.electric {
+  border: 1px solid rgb(175, 175, 2);
+}
+
+.electric:hover {
+  background-color: rgba(175, 175, 2, 0.151);
+  box-shadow:
+    0px 0px 0px 1px rgba(175, 175, 2, 0.151),
+  ;
+  border: 1px solid rgb(175, 175, 2, 0.151);
+}
+
+.psychic {
+  border: 1px solid rgb(255, 0, 255);
+}
+
+.psychic:hover {
+  background-color: rgba(255, 0, 255, 0.151);
+  box-shadow:
+    0px 0px 0px 1px rgba(255, 0, 255, 0.151),
+  ;
+  border: 1px solid rgb(255, 0, 255, 0.151);
+}
+
+.ice {
+  border: 1px solid rgb(0, 255, 255);
+}
+
+.ice:hover {
+  background-color: rgba(0, 255, 255, 0.151);
+  box-shadow:
+    0px 0px 0px 1px rgba(0, 255, 255, 0.151),
+  ;
+  border: 1px solid rgb(0, 255, 255, 0.151);
+}
+
+.dragon {
+  border: 1px solid rgb(0, 0, 255);
+}
+
+.dragon:hover {
+  background-color: rgba(0, 0, 255, 0.151);
+  box-shadow:
+    0px 0px 0px 1px rgba(0, 0, 255, 0.151),
+}
+
+.dark {
+  border: 1px solid rgb(0, 0, 0);
+}
+
+.dark {
+  background-color: rgba(0, 0, 0, 0.151);
+  box-shadow:
+    0px 0px 0px 1px rgba(0, 0, 0, 0.151),
+  ;
+  border: 1px solid rgb(0, 0, 0, 0.151);
+}
+
+.fairy {
+  border: 1px solid pink;
+}
+
+.fairy:hover {
+  background-color: rgba(255, 105, 180, 0.151);
+  box-shadow:
+    0px 0px 0px 1px rgba(255, 105, 180, 0.151),
+  ;
+  border: 1px solid rgb(255, 105, 180, 0.151);
+}
+
+.unknown {
+  border: 1px solid rgb(255, 255, 255);
+}
+
+.unknown:hover {
+  background-color: rgba(255, 255, 255, 0.151);
+  box-shadow:
+    0px 0px 0px 1px rgba(255, 255, 255, 0.151),
+  ;
+  border: 1px solid rgb(255, 255, 255, 0.151);
+}
+
+.shadow {
+  border: 1px solid rgb(0, 0, 0);
+}
+
+.shadow:hover {
+  background-color: rgba(0, 0, 0, 0.151);
+  box-shadow:
+    0px 0px 0px 1px rgba(0, 0, 0, 0.151),
+  ;
+  border: 1px solid rgb(0, 0, 0, 0.151);
 }

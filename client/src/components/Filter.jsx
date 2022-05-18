@@ -2,11 +2,17 @@ import React, { Fragment } from "react";
 import styles from "../styles/Filter.module.css";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setOrder, clearPokemonList, setPage } from "../redux/actions";
+import {
+  setOrder,
+  clearPokemonList,
+  setPage,
+  clearError,
+} from "../redux/actions";
 
 export default function Filter() {
   const dispatch = useDispatch();
   const { order } = useSelector((state) => state);
+
   const handleOption = (e) => {
     e.preventDefault();
     if (e.target.value === order) {
@@ -19,6 +25,7 @@ export default function Filter() {
       dispatch(setOrder(e.target.value));
     }
     dispatch(clearPokemonList());
+    dispatch(clearError());
   };
 
   return (

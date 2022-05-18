@@ -1,7 +1,12 @@
 import React, { Fragment, useState, useEffect } from "react";
 import styles from "../styles/Form.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { createPokemon, pushInTypes, clearTypes } from "../redux/actions";
+import {
+  createPokemon,
+  clearError,
+  clearPokemonCreate,
+  getTypes,
+} from "../redux/actions";
 import NavBar from "./NavBar";
 
 function validateForm(data) {
@@ -92,35 +97,56 @@ function validateForm(data) {
     errors.weight = "El peso debe contener sólo números y puntos";
   }
 
+  if (!data.types.length) {
+    errors.types = "El tipo es obligatorio";
+  }
   return errors;
 }
 
+const formDefault = {
+  name: "",
+  attack: "",
+  defense: "",
+  speed: "",
+  height: "",
+  weight: "",
+  types: [],
+};
+
 export default function Form() {
   const dispatch = useDispatch();
-  const { types } = useSelector((state) => state);
   const [error, setError] = useState({});
-  const [form, setForm] = useState({
-    name: "",
-    attack: "",
-    defense: "",
-    speed: "",
-    height: "",
-    weight: "",
-  });
+  const [send, setSend] = useState(false);
+  const [form, setForm] = useState(formDefault);
+
+  const {
+    error: errorCreate,
+    pokemonCreated,
+    types,
+  } = useSelector((state) => state);
 
   useEffect(() => {
-    if (types.length === 0) {
-      (async () => {
-        await fetch("http://localhost:3001/types");
-      })();
-    }
-  }, [dispatch, types]);
+    dispatch(getTypes());
+    return () => {
+      dispatch(clearPokemonCreate());
+      dispatch(clearError());
+    };
+  }, [dispatch]);
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    if (e.target.name === "types") {
+      setForm({
+        ...form,
+        [e.target.name]: [...new Set([...form.types, e.target.value])],
+      });
+      dispatch(clearError());
+      setSend(false);
+    } else {
+      setForm({
+        ...form,
+        [e.target.name]: e.target.value,
+      });
+    }
 
     setError(
       validateForm({
@@ -131,183 +157,116 @@ export default function Form() {
   };
 
   const handleSubmit = (e) => {
+    dispatch(clearPokemonCreate());
     e.preventDefault();
-    setError(
-      validateForm({
-        ...form,
-        [e.target.name]: e.target.value,
-      })
-    );
-
     if (Object.keys(error).length === 0) {
-      try {
-        dispatch(createPokemon({ ...form, types }));
-        dispatch(clearTypes());
-      } catch (e) {
-        alert(e);
-      } finally {
-        setForm({
-          name: "",
-          attack: "",
-          defense: "",
-          speed: "",
-          height: "",
-          weight: "",
-        });
-        alert("Pokemon creado");
-      }
+      setSend(true);
+      dispatch(createPokemon(form));
+      setForm(formDefault);
     } else {
-      alert("Por favor, llena todos los campos");
+      alert("Debe completar todos los campos");
     }
   };
 
-  const handleOption = (e) => {
-    e.preventDefault();
-    dispatch(pushInTypes(e.target.value));
-  };
-
+  const fields = [
+    {
+      name: "name",
+      label: "name",
+      type: "text",
+      value: form.name,
+      error: error.name,
+    },
+    {
+      name: "attack",
+      label: "attack",
+      type: "number",
+      value: form.attack,
+      error: error.attack,
+    },
+    {
+      name: "defense",
+      label: "defense",
+      type: "number",
+      value: form.defense,
+      error: error.defense,
+    },
+    {
+      name: "speed",
+      label: "speed",
+      type: "number",
+      value: form.speed,
+      error: error.speed,
+    },
+    {
+      name: "height",
+      label: "height",
+      type: "number",
+      value: form.height,
+      error: error.height,
+    },
+    {
+      name: "weight",
+      label: "weight",
+      type: "number",
+      value: form.weight,
+      error: error.weight,
+    },
+  ];
   return (
     <Fragment>
       <NavBar />
       <form className={styles.form} onSubmit={handleSubmit}>
         <h2>Create - Pokemon</h2>
-        <div>
-          <div className={styles.field}>
-            <label htmlFor="name">Name: </label>
-            <input
-              autoComplete="off"
-              className={error.name && styles.danger}
-              id="name"
-              type="text"
-              placeholder="name"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-            />
+        {fields.map(({ name, label, type, value, error }) => (
+          <div>
+            <div key={name} className={styles.field}>
+              <label htmlFor={name}>{label}</label>
+              <input
+                autoComplete={"off"}
+                className={error && styles.danger}
+                id={name}
+                type={type}
+                placeholder={label}
+                name={name}
+                value={value}
+                onChange={handleChange}
+              />
+            </div>
+            {error && <p className={styles.danger}>{error}</p>}
           </div>
-          {error.name && <p className={styles.danger}>{error.name}</p>}
-        </div>
-
+        ))}
         <div>
           <div className={styles.field}>
-            <label htmlFor="attack">Attack: </label>
-            <input
-              autoComplete="off"
-              className={error.attack && styles.danger}
-              id="attack"
-              type="text"
-              placeholder="attack"
-              name="attack"
-              value={form.attack}
-              onChange={handleChange}
-            />
-          </div>
-          {error.attack && <p className={styles.danger}>{error.attack}</p>}
-        </div>
-
-        <div>
-          <div className={styles.field}>
-            <label htmlFor="defense">Defense: </label>
-            <input
-              autoComplete="off"
-              className={error.defense && styles.danger}
-              id="defense"
-              type="text"
-              placeholder="defense"
-              name="defense"
-              value={form.defense}
-              onChange={handleChange}
-            />
-          </div>
-          {error.defense && <p className={styles.danger}>{error.defense}</p>}
-        </div>
-
-        <div>
-          <div className={styles.field}>
-            <label htmlFor="speed">Speed: </label>
-            <input
-              autoComplete="off"
-              className={error.speed && styles.danger}
-              id="speed"
-              type="text"
-              placeholder="speed"
-              name="speed"
-              value={form.speed}
-              onChange={handleChange}
-            />
-          </div>
-          {error.speed && <p className={styles.danger}>{error.speed}</p>}
-        </div>
-
-        <div>
-          <div className={styles.field}>
-            <label htmlFor="height">Height: </label>
-            <input
-              autoComplete="off"
-              className={error.height && styles.danger}
-              id="height"
-              type="text"
-              placeholder="height"
-              name="height"
-              value={form.height}
-              onChange={handleChange}
-            />
-          </div>
-          {error.height && <p className={styles.danger}>{error.height}</p>}
-        </div>
-
-        <div>
-          <div className={styles.field}>
-            <label htmlFor="weight">Weight: </label>
-            <input
-              autoComplete="off"
-              className={error.weight && styles.danger}
-              id="weight"
-              type="text"
-              placeholder="weight"
-              name="weight"
-              value={form.weight}
-              onChange={handleChange}
-            />
-          </div>
-          {error.weight && <p className={styles.danger}>{error.weight}</p>}
-        </div>
-        <div>
-          <div className={styles.field}>
-            <label htmlFor="weight">Type: </label>
-            <select name="" id="" onChange={handleOption}>
-              <option value="normal">Normal</option>
-              <option value="fire">Fire</option>
-              <option value="water">Water</option>
-              <option value="electric">Electric</option>
-              <option value="grass">Grass</option>
-              <option value="ice">Ice</option>
-              <option value="fighting">Fighting</option>
-              <option value="poison">Poison</option>
-              <option value="ground">Ground</option>
-              <option value="flying">Flying</option>
-              <option value="psychic">Psychic</option>
-              <option value="bug">Bug</option>
-              <option value="rock">Rock</option>
-              <option value="ghost">Ghost</option>
-              <option value="dragon">Dragon</option>
-              <option value="dark">Dark</option>
-              <option value="steel">Steel</option>
-              <option value="fairy">Fairy</option>
-              <option value="unknown">Unknown</option>
-              <option value="shadow">Shadow</option>
+            <label htmlFor="types">Types </label>
+            <select name="types" id="types" onChange={handleChange}>
+              {types?.map(({ name }) => (
+                <option value={name}>{name}</option>
+              ))}
             </select>
           </div>
-          {error.weight && <p className={styles.danger}>{error.weight}</p>}
+          {error.types && <p className={styles.danger}>{error.types}</p>}
         </div>
-        {types.length ? (
+        {form?.types.length ? (
           <ul className={styles.listTypes}>
-            {types.map((type) => {
-              return <li key={type}>{type}</li>;
-            })}
+            {form?.types.map((type) => (
+              <li key={type} className={styles[type.toLowerCase()]}>
+                {type}
+              </li>
+            ))}
           </ul>
         ) : null}
-        <button>create pokemon</button>
+        <div>
+          <button className={styles["btn-create"]}>create pokemon</button>
+          {errorCreate && <p>{errorCreate}</p>}
+        </div>
+
+        {Object.keys(pokemonCreated).length > 0 && !errorCreate ? (
+          <p>Nuevo pokemon creado! 😁</p>
+        ) : !Object.keys(pokemonCreated).length && send && !errorCreate ? (
+          <div className={styles.loading}>
+            <span className={styles.spinner}></span>
+          </div>
+        ) : null}
       </form>
     </Fragment>
   );
