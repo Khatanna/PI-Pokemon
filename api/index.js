@@ -19,10 +19,11 @@
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const server = require("./src/app.js");
 const { conn } = require("./src/db.js");
+const { DB_PORT } = process.env || 4000;
 
 // Syncing all the models at once.
-conn.sync({ force: true }).then(() => {
-  server.listen(3001, () => {
-    console.log("servidor levantado en el puerto " + 3001); // eslint-disable-line no-console
+conn.sync().then(() => {
+  server.listen(DB_PORT, () => {
+    console.log("servidor levantado en el puerto " + DB_PORT); // eslint-disable-line no-console
   });
 });
