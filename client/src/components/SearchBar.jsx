@@ -11,6 +11,11 @@ export default function SearchBar() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!search) {
+      dispatch(clearError());
+      alert("Please enter a pokemon name");
+      return;
+    }
     navigate(`/search/${search}`);
     dispatch(clearError());
     setSearch("");

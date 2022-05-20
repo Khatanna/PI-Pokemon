@@ -241,7 +241,7 @@ export default function Form() {
             <select name="types" id="types" onChange={handleChange}>
               {types?.map(({ name }) => (
                 <option value={name} key={name}>
-                  {name} key={name}
+                  {name}
                 </option>
               ))}
             </select>
