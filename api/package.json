@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon -L",
-    "test": "mocha ./tests/routes/*.spec.js"
+    "test": "mocha ./tests/routes/*.spec.js",
+    "build": "webpack --config webpack.config.js"
   },
   "author": "Henry",
   "license": "ISC",
