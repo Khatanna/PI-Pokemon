@@ -218,8 +218,8 @@ export default function Form() {
       <form className={styles.form} onSubmit={handleSubmit}>
         <h2>Create - Pokemon</h2>
         {fields.map(({ name, label, type, value, error }) => (
-          <div>
-            <div key={name} className={styles.field}>
+          <div key={name}>
+            <div className={styles.field}>
               <label htmlFor={name}>{label}</label>
               <input
                 autoComplete={"off"}
@@ -240,7 +240,9 @@ export default function Form() {
             <label htmlFor="types">Types </label>
             <select name="types" id="types" onChange={handleChange}>
               {types?.map(({ name }) => (
-                <option value={name}>{name}</option>
+                <option value={name} key={name}>
+                  {name} key={name}
+                </option>
               ))}
             </select>
           </div>

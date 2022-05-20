@@ -1,6 +1,10 @@
 import React, { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { getPokemonByName, clearPokemonSearch } from "../redux/actions";
+import {
+  getPokemonByName,
+  clearPokemonSearch,
+  clearError,
+} from "../redux/actions";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Pokemon from "./Pokemon";
@@ -17,8 +21,9 @@ export default function PokemonSearch() {
     dispatch(getPokemonByName(name));
     return () => {
       dispatch(clearPokemonSearch());
+      dispatch(clearError());
     };
-  }, [name]);
+  }, [name, dispatch]);
 
   return (
     <Fragment>
