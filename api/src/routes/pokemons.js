@@ -4,7 +4,7 @@ const router = Router();
 const API_URL = "https://pokeapi.co/api/v2";
 const axios = require("axios");
 const status = require("./constants/status.js");
-const URL_LOCAL = "http://localhost:3001/pokemons";
+const URL_LOCAL = "https://pi-pokemon-main.herokuapp.com/pokemons";
 
 router.get("/", async (req, res, next) => {
   const { name } = req.query;
