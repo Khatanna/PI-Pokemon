@@ -9,6 +9,9 @@ import {
   getTypes,
   pushInFilterTypes,
   removeFromFilterTypes,
+  clearPokemonList,
+  getPokemonList,
+  clearFilterTypes,
 } from "../redux/actions";
 
 export default function Filter() {
@@ -20,6 +23,7 @@ export default function Filter() {
     return () => {
       dispatch(setOrder(null));
       dispatch(clearError());
+      dispatch(clearFilterTypes());
     };
   }, [dispatch]);
 
@@ -44,13 +48,15 @@ export default function Filter() {
   };
 
   const handleChange = (e, name) => {
+    dispatch(clearError());
+    dispatch(clearPokemonList());
     if (e.target.checked) {
       dispatch(pushInFilterTypes(name));
-      dispatch(setOrder("types"));
+      dispatch(clearPokemonList());
     } else {
       dispatch(removeFromFilterTypes(name));
       if (filterTypes.length === 1) {
-        dispatch(setOrder(null));
+        dispatch(getPokemonList());
       }
     }
   };

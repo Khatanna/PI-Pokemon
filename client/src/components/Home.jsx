@@ -8,12 +8,12 @@ import Filter from "./Filter";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { page, order, filterTypes } = useSelector((state) => state);
+  const { page, filterTypes } = useSelector((state) => state);
   useEffect(() => {
     if (filterTypes.length > 0) {
       dispatch(filterPokemonByTypes(page, filterTypes));
     }
-  }, [dispatch, order, page, filterTypes]);
+  }, [dispatch, page, filterTypes]);
 
   return (
     <Fragment>

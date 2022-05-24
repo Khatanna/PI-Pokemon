@@ -125,6 +125,16 @@ export default function reducer(state = initialState, { type, payload }) {
         ...state,
         filterTypes: state.filterTypes.filter((type) => type !== payload),
       };
+    case types.FILTER_POKEMON_BY_TYPES_ERROR:
+      return {
+        ...state,
+        error: payload,
+      };
+    case types.CLEAR_FILTER_TYPES:
+      return {
+        ...state,
+        filterTypes: [],
+      };
     default:
       return state;
   }

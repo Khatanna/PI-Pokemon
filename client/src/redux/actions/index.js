@@ -162,10 +162,17 @@ export const filterPokemonByTypes = (page, ArrayOfTypes) => {
         });
       }
     }
-    dispatch({
-      type: types.FILTER_BY_TYPES,
-      payload: pokemons.slice((page - 1) * 12, 12 * page),
-    });
+    if (pokemons.length === 0) {
+      dispatch({
+        type: types.FILTER_POKEMON_BY_TYPES_ERROR,
+        payload: "There are no pokemons with this type 😪",
+      });
+    } else {
+      dispatch({
+        type: types.FILTER_BY_TYPES,
+        payload: pokemons.slice((page - 1) * 12, 12 * page),
+      });
+    }
   };
 };
 
@@ -190,6 +197,12 @@ export const clearPokemonList = () => {
 export const clearPokemonCreate = () => {
   return {
     type: types.CLEAR_POKEMON_CREATE,
+  };
+};
+
+export const clearFilterTypes = () => {
+  return {
+    type: types.CLEAR_FILTER_TYPES,
   };
 };
 
