@@ -143,6 +143,7 @@ export default function Form() {
         });
         setError(
           validateForm({
+            ...form,
             types: [...new Set([...form.types, e.target.value])],
           })
         );

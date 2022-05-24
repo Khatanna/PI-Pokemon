@@ -9,13 +9,13 @@
 }
 .button {
   border-radius: 3px;
-  border: 1px solid rgb(38, 144, 38);
+  border: #f07253;
   background-color: white;
   padding: 5px;
-  color: rgb(38, 144, 38);
+  color: #f07253;
   transition: all 0.3s;
 }
 .button:hover{
-  background-color: rgb(38, 144, 38);
+  background-color: #f07253;
   color: white;
 }

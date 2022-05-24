@@ -103,5 +103,3 @@ export function filterByCreated(page, url, results) {
     }
   };
 }
-
-export function filterByTypes(page, url, results) {}

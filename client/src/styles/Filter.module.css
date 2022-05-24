@@ -47,3 +47,14 @@
   border-radius: 3px;
   border: 1px solid rgba(119, 119, 119, 0.774)
 }
+
+@media screen and (max-width: 680px) {
+  .filter-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .selects{
+    flex-direction: column;
+  }
+}
+  
