@@ -6,6 +6,7 @@ import {
   clearError,
   clearPokemonCreate,
   getTypes,
+  clearTypes,
 } from "../redux/actions";
 import NavBar from "./NavBar";
 
@@ -96,7 +97,7 @@ function validateForm(data) {
   } else if (data.weight.match(/[^0-9.]/g)) {
     errors.weight = "El peso debe contener sólo números y puntos";
   }
-
+  console.log(data.types.length);
   if (!data.types.length) {
     errors.types = "El tipo es obligatorio";
   }
@@ -128,17 +129,26 @@ export default function Form() {
   useEffect(() => {
     dispatch(getTypes());
     return () => {
-      dispatch(clearPokemonCreate());
+      dispatch(clearTypes());
       dispatch(clearError());
     };
   }, [dispatch]);
 
   const handleChange = (e) => {
     if (e.target.name === "types") {
-      setForm({
-        ...form,
-        [e.target.name]: [...new Set([...form.types, e.target.value])],
-      });
+      if (form.types.length < 3) {
+        setForm({
+          ...form,
+          types: [...new Set([...form.types, e.target.value])],
+        });
+        setError(
+          validateForm({
+            types: [...new Set([...form.types, e.target.value])],
+          })
+        );
+      } else {
+        alert("Solo puedes seleccionar 3 tipos");
+      }
       dispatch(clearError());
       setSend(false);
     } else {
@@ -146,14 +156,13 @@ export default function Form() {
         ...form,
         [e.target.name]: e.target.value,
       });
+      setError(
+        validateForm({
+          ...form,
+          [e.target.name]: e.target.value,
+        })
+      );
     }
-
-    setError(
-      validateForm({
-        ...form,
-        [e.target.name]: e.target.value,
-      })
-    );
   };
 
   const handleSubmit = (e) => {
@@ -166,6 +175,13 @@ export default function Form() {
     } else {
       alert("Debe completar todos los campos");
     }
+  };
+
+  const handleDelete = (e) => {
+    setForm({
+      ...form,
+      types: form.types.filter((type) => type !== e.target.id),
+    });
   };
 
   const fields = [
@@ -249,19 +265,26 @@ export default function Form() {
           {error.types && <p className={styles.danger}>{error.types}</p>}
         </div>
         {form?.types.length ? (
-          <ul className={styles.listTypes}>
-            {form?.types.map((type) => (
-              <li key={type} className={styles[type.toLowerCase()]}>
-                {type}
-              </li>
-            ))}
-          </ul>
+          <div>
+            <ul className={styles.listTypes}>
+              {form?.types.map((type) => (
+                <li
+                  key={type}
+                  className={styles[type.toLowerCase()]}
+                  onClick={handleDelete}
+                  id={type}
+                >
+                  {type}
+                </li>
+              ))}
+            </ul>
+            <div className={styles.delete}>click to delete the type</div>
+          </div>
         ) : null}
         <div>
           <button className={styles["btn-create"]}>create pokemon</button>
           {errorCreate && <p>{errorCreate}</p>}
         </div>
-
         {Object.keys(pokemonCreated).length > 0 && !errorCreate ? (
           <p>Nuevo pokemon creado! 😁</p>
         ) : !Object.keys(pokemonCreated).length && send && !errorCreate ? (

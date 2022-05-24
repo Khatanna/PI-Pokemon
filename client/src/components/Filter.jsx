@@ -1,10 +1,9 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import styles from "../styles/Filter.module.css";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setOrder,
-  clearPokemonList,
   setPage,
   clearError,
   getTypes,
@@ -15,7 +14,14 @@ import {
 export default function Filter() {
   const dispatch = useDispatch();
   const [list, setList] = useState(false);
-  const { types, filterTypes } = useSelector((state) => state);
+  const { error, types, filterTypes } = useSelector((state) => state);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setOrder(null));
+      dispatch(clearError());
+    };
+  }, [dispatch]);
 
   const handleOption = (e) => {
     e.preventDefault();
@@ -23,16 +29,18 @@ export default function Filter() {
       dispatch(setOrder(null));
     } else if (e.target.value === "types") {
       dispatch(getTypes());
-
+      if (error && !list) {
+        dispatch(clearError());
+        dispatch(setOrder(null));
+      }
       setList(!list);
       e.target.selectedIndex = 0;
       return;
     } else {
+      setList(false);
       dispatch(setPage(1));
       dispatch(setOrder(e.target.value));
     }
-    dispatch(clearPokemonList());
-    dispatch(clearError());
   };
 
   const handleChange = (e, name) => {
@@ -40,13 +48,11 @@ export default function Filter() {
       dispatch(pushInFilterTypes(name));
       dispatch(setOrder("types"));
     } else {
-      console.log(filterTypes.length);
       dispatch(removeFromFilterTypes(name));
       if (filterTypes.length === 1) {
         dispatch(setOrder(null));
       }
     }
-    dispatch(clearPokemonList());
   };
 
   return (

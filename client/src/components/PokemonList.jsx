@@ -1,11 +1,32 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import Paginator from "./Paginator";
 import ScreenLoading from "./ScreenLoading";
 import styles from "../styles/PokemonList.module.css";
 import Pokemon from "./Pokemon";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import {
+  getPokemonList,
+  clearPokemonList,
+  filterPokemon,
+  clearError,
+} from "../redux/actions";
+
 export default function PokemonList() {
-  const { pokemonList, error } = useSelector((state) => state);
+  const { order, page, pokemonList, error } = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (order) {
+      dispatch(filterPokemon(page, order));
+    } else {
+      dispatch(getPokemonList(page));
+    }
+    return () => {
+      dispatch(clearPokemonList());
+      dispatch(clearError());
+    };
+  }, [dispatch, page, order]);
 
   return (
     <Fragment>

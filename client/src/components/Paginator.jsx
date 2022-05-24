@@ -1,41 +1,40 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPage, clearPokemonList, getCount } from "../redux/actions";
+import { setPage, getCount } from "../redux/actions";
 import styles from "../styles/Paginator.module.css";
 
 export default function Paginator() {
   const dispatch = useDispatch();
   const [input, setInput] = useState("");
-  const { page, count, pokemonList } = useSelector((state) => state);
-  const limit = Math.ceil(
-    //count - (40 + pokemonList.length) < 0 ? count / 12 : (count - 40) / 12
-    pokemonList.length < 12 ? 1 : count / 12
-  );
+  const { page, count } = useSelector((state) => state);
+  const limit = Math.ceil(count / 12);
 
   useEffect(() => {
     dispatch(getCount());
-    if (input < 1 || input > limit) {
-      setInput("");
-    }
-  }, [dispatch, input, limit]);
+  }, [dispatch]);
 
   const handlePage = (e) => {
     const options = {
       next: () => dispatch(setPage(page + 1)),
       previous: () => dispatch(setPage(page - 1)),
-      clear: () => dispatch(clearPokemonList()),
     };
     options[e.target.id]();
-    options.clear();
   };
 
   const goToPage = () => {
     if (+input === page) {
       setInput("");
-    } else {
-      dispatch(setPage(+input));
-      dispatch(clearPokemonList());
+      return;
     }
+    dispatch(setPage(+input));
+  };
+
+  const handleChange = ({ target: { value } }) => {
+    if (value < 1 || value > limit) {
+      setInput("");
+      return;
+    }
+    setInput(value);
   };
 
   return (
@@ -56,11 +55,7 @@ export default function Paginator() {
         ) : (
           <button disabled>Next</button>
         )}
-        <input
-          type="number"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
+        <input type="number" value={input} onChange={handleChange} />
         {input !== "" ? (
           <button onClick={goToPage}>Go</button>
         ) : (

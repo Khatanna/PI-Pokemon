@@ -96,7 +96,6 @@ export function filterByCreated(page, url, results) {
         });
       }
     } catch (error) {
-      console.log(error);
       dispatch({
         type: types.FILTER_POKEMON_ERROR,
         payload: "Pokemon not found 😪",

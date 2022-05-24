@@ -32,7 +32,10 @@ export default function PokemonDetails() {
                 <img src={image} alt={pokemon.name} />
               </div>
               <div className={styles.pokemon__info}>
-                <h1 className={styles.pokemon__name}>{pokemon.name}</h1>
+                <h1 className={styles.pokemon__name}>
+                  {pokemon.name}
+                  <div className={styles.delete}>Eliminar</div>
+                </h1>
                 <div className={styles.weight__height}>
                   <div>Weight: {pokemon.weight / 100} Kg</div>
                   <div>Height: {pokemon.height / 10} Mts</div>

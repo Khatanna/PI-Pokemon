@@ -67,6 +67,7 @@ input.danger {
   padding: 3px 10px;
   border-radius: 5px;
   transition: all 0.3s;
+  cursor: pointer;
 }
 
 .loading {
@@ -91,6 +92,12 @@ input.danger {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
   
+}
+
+.delete{
+  text-align: center;
+  color: rgb(17, 185, 17);
+  font-size: 0.7em;
 }
 
 .normal {

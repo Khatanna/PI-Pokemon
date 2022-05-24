@@ -18,6 +18,10 @@
 }
 
 .pokemon__name{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
   font-weight: bold;
   text-transform: capitalize;
   margin-bottom: 20px;
@@ -96,4 +100,17 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.delete{
+  display: flex;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: rgb(255, 0, 0);
+  color: white;
+  font-size: 0.2em;
+  cursor: pointer;
+  z-index: 10;
 }

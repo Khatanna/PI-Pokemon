@@ -13,15 +13,15 @@ import NavBar from "./NavBar";
 import styles from "../styles/PokemonSearch.module.css";
 
 export default function PokemonSearch() {
-  const { pokemonSearch: pokemon, error } = useSelector((state) => state);
-  const dispatch = useDispatch();
+  const { pokemonSearch, error } = useSelector((state) => state);
   const { name } = useParams();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getPokemonByName(name));
     return () => {
-      dispatch(clearPokemonSearch());
       dispatch(clearError());
+      dispatch(clearPokemonSearch());
     };
   }, [name, dispatch]);
 
@@ -31,8 +31,8 @@ export default function PokemonSearch() {
       <div className={styles.pokemon}>
         {error ? (
           <h1>{error}</h1>
-        ) : Object.keys(pokemon).length ? (
-          <Pokemon pokemon={pokemon} />
+        ) : Object.keys(pokemonSearch).length ? (
+          <Pokemon pokemon={pokemonSearch} />
         ) : (
           <ScreenLoading />
         )}

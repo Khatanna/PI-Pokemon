@@ -105,6 +105,11 @@ export default function reducer(state = initialState, { type, payload }) {
         ...state,
         error: null,
       };
+    case types.CLEAR_TYPES:
+      return {
+        ...state,
+        types: [],
+      };
     case types.GET_TYPES:
       return {
         ...state,
