@@ -18,7 +18,12 @@ export default function SearchBar() {
 
   const handleChange = ({ target }) => {
     if (search.length < 20) {
-      setSearch(target.value.trim().replace(/[0-9]/g, ""));
+      setSearch(
+        target.value
+          .replace(/[.*+\-?^${}()|[\]\\!0-9,_¿´¡':;"#%&/°=`]/g, " ")
+          .trim()
+          .toLowerCase()
+      );
     }
   };
 

@@ -60,7 +60,7 @@ function validateForm(data) {
     errors.speed = "La velocidad debe ser menor a 150";
   } else if (data.speed < 0) {
     errors.speed = "La velocidad debe ser mayor a 0";
-  } else if (data.speed.match(/[^a-zA-Z0-9]/g)) {
+  } else if (data.speed.match(/[^a-z0-9]/g)) {
     errors.speed = "La velocidad debe contener sólo caracteres alfanuméricos";
   } else if (data.speed.match(/[^0-9]/g)) {
     errors.speed = "La velocidad debe contener sólo números";
@@ -155,7 +155,7 @@ export default function Form() {
     } else {
       setForm({
         ...form,
-        [e.target.name]: e.target.value,
+        [e.target.name]: e.target.value.toLowerCase(),
       });
       setError(
         validateForm({
