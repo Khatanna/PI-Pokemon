@@ -1,7 +1,7 @@
 import * as types from "../constants/ActionTypes.js";
 import { orderByName, orderByAttack, filterByCreated } from "./filters.js";
 
-const URL = "https://pi-pokeapi.herokuapp.com/";
+const URL = "https://pi-pokeapi.herokuapp.com";
 
 export const getPokemonByName = (pokemonName) => {
   return async (dispatch) => {
