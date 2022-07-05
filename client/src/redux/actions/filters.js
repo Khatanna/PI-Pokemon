@@ -19,7 +19,7 @@ export function orderByName(page, url, results) {
       });
     }
     dispatch({
-      type: types.FILTER_POKEMON,
+      type: types.ORDER_BY_NAME,
       payload: results.slice((page - 1) * 12, 12 * page),
     });
   };
@@ -58,7 +58,7 @@ export function orderByAttack(page, url, results, order) {
       );
     }
     dispatch({
-      type: types.FILTER_POKEMON,
+      type: types.ORDER_BY_ATTACK,
       payload: results.slice((page - 1) * 12, 12 * page),
     });
   };
@@ -84,10 +84,14 @@ export function filterByCreated(page, url, results) {
         });
       }
       const creates = results.filter(({ id }) => isNaN(id));
+      console.log(creates);
       if (creates.length > 0) {
         dispatch({
           type: types.FILTER_POKEMON,
-          payload: creates.slice((page - 1) * 12, 12 * page),
+          payload: {
+            count: creates.length,
+            creates: creates.slice((page - 1) * 12, 12 * page),
+          },
         });
       } else {
         dispatch({

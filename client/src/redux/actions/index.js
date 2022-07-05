@@ -1,8 +1,8 @@
 import * as types from "../constants/ActionTypes.js";
 import { orderByName, orderByAttack, filterByCreated } from "./filters.js";
 
-//const URL = "http://localhost:3001";
-const URL = "https://pi-pokemon-main.herokuapp.com";
+const URL = "http://localhost:3001";
+//const URL = "https://pi-pokemon-main.herokuapp.com";
 
 export const getPokemonByName = (pokemonName) => {
   return async (dispatch) => {
@@ -49,15 +49,12 @@ export const getPokemonList = (page = 1) => {
       const { results } = await response.json();
       for (let data of results) {
         const response = await fetch(data.url);
-        const { id, name, types, stats, sprites, height, weight } =
-          await response.json();
+        const { id, name, types, stats, sprites } = await response.json();
         pokemons.push({
           id,
           name,
           types: types.map(({ type }) => type.name),
           stats,
-          height,
-          weight,
           sprite: sprites?.other?.dream_world?.front_default || null,
         });
       }
@@ -114,7 +111,32 @@ export const setOrder = (order) => {
   };
 };
 
-export const filterPokemon = (page = 1, typeOfFilter) => {
+const orderByNameForExistens = (pokemonList, order) => {
+  return (dispatch) => {
+    if (order === "asc") {
+      dispatch({
+        type: types.FILTER_POKEMON,
+        payload: {
+          count: pokemonList.length,
+          creates: pokemonList.sort((a, b) => a.name.localeCompare(b.name)),
+        },
+      });
+      return;
+    }
+    if (order === "desc") {
+      dispatch({
+        type: types.FILTER_POKEMON,
+        payload: {
+          count: pokemonList.length,
+          creates: pokemonList.sort((a, b) => b.name.localeCompare(a.name)),
+        },
+      });
+      return;
+    }
+  };
+};
+
+export const filterPokemon = (page = 1, typeOfFilter, pokemonList) => {
   const results = [];
   const responses = {
     name: (order) =>
@@ -128,6 +150,10 @@ export const filterPokemon = (page = 1, typeOfFilter) => {
     created: () =>
       filterByCreated(page, `${URL}/pokemons?page=1&limit=40`, results),
   };
+  if (typeOfFilter.includes("name") && pokemonList.length > 0) {
+    const [, order] = typeOfFilter.split("_");
+    return orderByNameForExistens(pokemonList, order);
+  }
   if (typeOfFilter.includes("name")) {
     const [, order] = typeOfFilter.split("_");
     return responses.name(order);
@@ -170,7 +196,10 @@ export const filterPokemonByTypes = (page, ArrayOfTypes) => {
     } else {
       dispatch({
         type: types.FILTER_BY_TYPES,
-        payload: pokemons.slice((page - 1) * 12, 12 * page),
+        payload: {
+          count: pokemons.length,
+          pokemons: pokemons.slice((page - 1) * 12, 12 * page),
+        },
       });
     }
   };
@@ -219,9 +248,8 @@ export const getTypes = () => {
 
 export const getCount = () => {
   return async (dispatch) => {
-    const response = await fetch(`${URL}/pokemons?page=1&limit=12`);
+    const response = await fetch(`${URL}/pokemons`);
     const { count } = await response.json();
-
     dispatch({
       type: types.GET_COUNT,
       payload: count,

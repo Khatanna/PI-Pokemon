@@ -4,7 +4,7 @@ const router = Router();
 const API_URL = "https://pokeapi.co/api/v2";
 const axios = require("axios");
 const status = require("./constants/status.js");
-const URL_LOCAL = "https://pi-pokemon-main.herokuapp.com/pokemons";
+const URL = "http://localhost:3001/pokemons";
 
 router.get("/", async (req, res, next) => {
   const { name } = req.query;
@@ -60,8 +60,8 @@ router.get("/", async (req, res) => {
     return res.redirect("/pokemons?page=1&limit=12");
   }
   try {
-    let url_next = `${URL_LOCAL}?page=${+page + 1}&limit=${limit}`;
-    let url_previous = `${URL_LOCAL}?page=${+page - 1}&limit=${limit}`;
+    let url_next = `${URL}?page=${+page + 1}&limit=${limit}`;
+    let url_previous = `${URL}?page=${+page - 1}&limit=${limit}`;
 
     const {
       data,
@@ -85,7 +85,7 @@ router.get("/", async (req, res) => {
     const response = [
       ...pokemons.map(({ name, id }) => ({
         name,
-        url: `${URL_LOCAL}/${id}`,
+        url: `${URL}/${id}`,
       })),
       ...oneResult,
       ...twoResult,
@@ -93,20 +93,20 @@ router.get("/", async (req, res) => {
 
     if (filter === "name" && order === "asc") {
       response.sort((a, b) => a.name.localeCompare(b.name));
-      url_next = `${URL_LOCAL}?page=${
+      url_next = `${URL}?page=${
         +page + 1
       }&limit=${limit}&filter=name&order=asc`;
-      url_previous = `${URL_LOCAL}?page=${
+      url_previous = `${URL}?page=${
         +page - 1
       }&limit=${limit}&filter=name&order=asc`;
     }
 
     if (filter === "name" && order === "desc") {
       response.sort((a, b) => b.name.localeCompare(a.name));
-      url_next = `${URL_LOCAL}?page=${
+      url_next = `${URL}?page=${
         +page + 1
       }&limit=${limit}&filter=name&order=desc`;
-      url_previous = `${URL_LOCAL}?page=${
+      url_previous = `${URL}?page=${
         +page - 1
       }&limit=${limit}&filter=name&order=desc`;
     }
@@ -142,11 +142,7 @@ router.get("/:id", async (req, res) => {
       return res.status(status.OK).json({
         id: pokemon.id,
         name: pokemon.name,
-        stats: [
-          { base_stat: pokemon.attack, stat: { name: "attack" } },
-          { base_stat: pokemon.defense, stat: { name: "defense" } },
-          { base_stat: pokemon.speed, stat: { name: "speed" } },
-        ],
+        stats: [{ base_stat: pokemon.attack, stat: { name: "attack" } }],
         types: types.map((type, index) => {
           return {
             slot: index + 1,
@@ -155,8 +151,6 @@ router.get("/:id", async (req, res) => {
             },
           };
         }),
-        height: pokemon.height,
-        weight: pokemon.weight,
       });
     } catch (error) {
       return res.status(status.NOT_FOUND).json({
@@ -215,7 +209,7 @@ router.post("/", async (req, res) => {
       await pokemon.addTypes(type);
       return res.status(status.CREATED).json({
         name: pokemon.name,
-        url: `${URL_LOCAL}/${pokemon.id}`,
+        url: `${URL}/${pokemon.id}`,
       });
     } else {
       return res.sendStatus(status.CONFLICT);

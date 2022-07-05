@@ -7,6 +7,7 @@ import {
   setPage,
   clearError,
   getTypes,
+  getCount,
   pushInFilterTypes,
   removeFromFilterTypes,
   clearPokemonList,
@@ -31,6 +32,7 @@ export default function Filter() {
     e.preventDefault();
     if (e.target.value === "default") {
       dispatch(setOrder(null));
+      dispatch(getCount());
     } else if (e.target.value === "types") {
       dispatch(getTypes());
       if (error && !list) {
@@ -57,6 +59,7 @@ export default function Filter() {
       dispatch(removeFromFilterTypes(name));
       if (filterTypes.length === 1) {
         dispatch(getPokemonList());
+        dispatch(getCount());
       }
     }
   };

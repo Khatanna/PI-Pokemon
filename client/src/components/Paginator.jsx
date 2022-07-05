@@ -10,8 +10,10 @@ export default function Paginator() {
   const limit = Math.ceil(count / 12);
 
   useEffect(() => {
-    dispatch(getCount());
-  }, [dispatch]);
+    if (!count) {
+      dispatch(getCount());
+    }
+  }, [dispatch, count]);
 
   const handlePage = (e) => {
     const options = {

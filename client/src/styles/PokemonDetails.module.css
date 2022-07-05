@@ -102,18 +102,6 @@
   align-items: center;
 }
 
-.delete{
-  display: flex;
-  width: fit-content;
-  height: fit-content;
-  border-radius: 5px;
-  padding: 5px;
-  background-color: rgb(255, 0, 0);
-  color: white;
-  font-size: 0.2em;
-  cursor: pointer;
-  z-index: 10;
-}
 
 @media screen and (max-width: 850px){
   .pokemon{

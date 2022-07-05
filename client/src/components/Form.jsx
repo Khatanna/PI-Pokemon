@@ -97,7 +97,6 @@ function validateForm(data) {
   } else if (data.weight.match(/[^0-9.]/g)) {
     errors.weight = "El peso debe contener sólo números y puntos";
   }
-  console.log(data.types.length);
   if (!data.types.length) {
     errors.types = "El tipo es obligatorio";
   }
@@ -136,7 +135,7 @@ export default function Form() {
 
   const handleChange = (e) => {
     if (e.target.name === "types") {
-      if (form.types.length < 3) {
+      if (form.types.length < 2) {
         setForm({
           ...form,
           types: [...new Set([...form.types, e.target.value])],
@@ -148,7 +147,7 @@ export default function Form() {
           })
         );
       } else {
-        alert("Solo puedes seleccionar 3 tipos");
+        alert("Solo puedes seleccionar 2 tipos");
       }
       dispatch(clearError());
       setSend(false);

@@ -55,10 +55,22 @@ export default function reducer(state = initialState, { type, payload }) {
         ...state,
         page: payload,
       };
-    case types.FILTER_POKEMON:
+    case types.ORDER_BY_NAME:
       return {
         ...state,
         pokemonList: payload,
+      };
+    case types.ORDER_BY_ATTACK:
+      return {
+        ...state,
+        pokemonList: payload,
+      };
+    case types.FILTER_POKEMON:
+      console.log(payload.creates);
+      return {
+        ...state,
+        pokemonList: payload.creates,
+        count: payload.length,
       };
     case types.FILTER_POKEMON_ERROR:
       return {
@@ -68,7 +80,8 @@ export default function reducer(state = initialState, { type, payload }) {
     case types.FILTER_BY_TYPES:
       return {
         ...state,
-        pokemonList: payload,
+        pokemonList: payload.pokemons,
+        count: payload.count,
       };
     case types.SET_ORDER:
       return {

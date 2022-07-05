@@ -18,7 +18,7 @@ export default function PokemonList() {
 
   useEffect(() => {
     if (order) {
-      dispatch(filterPokemon(page, order));
+      dispatch(filterPokemon(page, order, pokemonList));
     } else {
       dispatch(getPokemonList(page));
     }
