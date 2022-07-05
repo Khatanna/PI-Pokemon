@@ -1,8 +1,7 @@
 import * as types from "../constants/ActionTypes.js";
 import { orderByName, orderByAttack, filterByCreated } from "./filters.js";
 
-const URL = "http://localhost:3001";
-//const URL = "https://pi-pokemon-main.herokuapp.com";
+const URL = "https://pi-pokeapi.herokuapp.com/";
 
 export const getPokemonByName = (pokemonName) => {
   return async (dispatch) => {
@@ -143,7 +142,7 @@ export const filterPokemon = (page = 1, typeOfFilter, pokemonList) => {
       orderByName(
         page,
         `${URL}/pokemons?page=1&limit=40&filter=name&order=${order}`,
-        results
+        results,
       ),
     attack: (order) =>
       orderByAttack(page, `${URL}/pokemons?page=1&limit=40`, results, order),
